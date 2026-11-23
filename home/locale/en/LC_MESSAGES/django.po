@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-02 10:55+0100\n"
+"POT-Creation-Date: 2026-11-23 17:49+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -119,7 +119,7 @@ msgstr ""
 msgid "Schulen"
 msgstr "Schools"
 
-#: home/templates/companies_and_schools.html:13 home/templates/home.html:350
+#: home/templates/companies_and_schools.html:13 home/templates/home.html:853
 msgid "ClimateQuest für Schulen"
 msgstr "ClimateQuest for Schools"
 
@@ -165,7 +165,7 @@ msgstr ""
 "Click here to add a climate-friendly action which you carried out before to "
 "receive climate points."
 
-#: home/templates/dashboard.html:46
+#: home/templates/dashboard.html:46 home/templates/home.html:818
 msgid "Aktion eintragen"
 msgstr "Log Action"
 
@@ -202,7 +202,7 @@ msgstr ""
 "like <i>collect at least 50 climate points this week</i>. If you make this "
 "quest, you'll be inducted into the hall of fame."
 
-#: home/templates/dashboard.html:82 home/templates/home.html:319
+#: home/templates/dashboard.html:82 home/templates/home.html:807
 msgid "Zur Hall of Fame"
 msgstr "To the hall of fame"
 
@@ -362,7 +362,6 @@ msgid "Kuckucksblumenstr. 23"
 msgstr "Kuckucksblumenstr. 23"
 
 #: home/templates/datenschutz.html:21
-#| msgid "80469 München"
 msgid "80995 München"
 msgstr "80995 München"
 
@@ -931,7 +930,7 @@ msgstr "Via feedback form:"
 msgid "Feedback-Formular"
 msgstr "Feedback Form"
 
-#: home/templates/home.html:8
+#: home/templates/home.html:9
 msgid ""
 "Willkommen bei ClimateQuest. Motiviere dich selbst für mehr Klimaschutz, "
 "indem du Klimapunkte sammelst, dich mit anderen Usern vergleichst, dein "
@@ -949,37 +948,225 @@ msgstr ""
 msgid "Startseite"
 msgstr "Home"
 
-#: home/templates/home.html:117
+#: home/templates/home.html:596
+msgid "Motivation für mehr Klimaschutz"
+msgstr "Motivation for more climate action"
+
+#: home/templates/home.html:599
+msgid "Kapitel"
+msgstr "Chapter"
+
+#: home/templates/home.html:603 home/templates/home.html:842
 msgid "Zum Dashboard"
 msgstr "To the dashboard"
 
-#: home/templates/home.html:122
-msgid "ClimateQuest - Motivation für mehr Klimaschutz"
-msgstr "ClimateQuest - motivation for a better climate"
+#: home/templates/home.html:606
+msgid "Registrieren"
+msgstr "Sign up"
 
-#: home/templates/home.html:145
-msgid "Bild, auf dem ein Baum gepflanzt wird"
-msgstr "Picture of a tree being planted"
+#: home/templates/home.html:610
+msgid "ClimateQuest Startseite"
+msgstr "ClimateQuest home page"
 
-#: home/templates/home.html:167
+#: home/templates/home.html:613
+msgid "1,5 Grad"
+msgstr "1.5 degrees"
+
+#: home/templates/home.html:622 home/templates/home.html:643
+#: home/templates/home.html:665
+msgid "Klimawandel in Zahlen"
+msgstr "Climate change in numbers"
+
+#: home/templates/home.html:623
+msgid "1,5"
+msgstr "1.5"
+
+#: home/templates/home.html:625
+msgid ""
+"So viel wärmer war die Erde 2024 im Schnitt als vor der Industrialisierung. "
+"Zum ersten Mal über ein ganzes Jahr."
+msgstr ""
+"That's how much warmer Earth was on average in 2024 than before "
+"industrialization. The first time for an entire year."
+
+#: home/templates/home.html:626
+msgid ""
+"Hitzewellen, Dürren und Überschwemmungen sind schon heute spürbar. Jedes "
+"weitere Zehntelgrad macht sie schlimmer."
+msgstr ""
+"Heat waves, droughts and floods are already being felt today. Every further "
+"tenth of a degree makes them worse."
+
+#: home/templates/home.html:627
+msgid "Quelle: WMO, State of the Global Climate 2024"
+msgstr "Source: WMO, State of the Global Climate 2024"
+
+#: home/templates/home.html:628 home/templates/home.html:650
+msgid "Weiter"
+msgstr "Next"
+
+#: home/templates/home.html:641
+msgid "37 Milliarden Tonnen"
+msgstr "37 billion tonnes"
+
+#: home/templates/home.html:645
+msgid "Mrd. t CO₂"
+msgstr "bn t CO₂"
+
+#: home/templates/home.html:646
+msgid ""
+"So viel CO₂ setzen wir jedes Jahr durch Kohle, Öl und Gas frei. Über 1.000 "
+"Tonnen pro Sekunde."
+msgstr ""
+"That's how much CO₂ we release every year by burning coal, oil and gas. Over"
+" 1,000 tonnes per second."
+
+#: home/templates/home.html:647
+msgid "CO₂, seit du diese Seite geöffnet hast"
+msgstr "CO₂ since you opened this page"
+
+#: home/templates/home.html:649
+msgid "Quelle: Global Carbon Budget 2024"
+msgstr "Source: Global Carbon Budget 2024"
+
+#: home/templates/home.html:663
+msgid "3,3 Milliarden Menschen"
+msgstr "3.3 billion people"
+
+#: home/templates/home.html:666
+msgid "3,3"
+msgstr "3.3"
+
+#: home/templates/home.html:667
+msgid "Mrd. Menschen"
+msgstr "bn people"
+
+#: home/templates/home.html:668
+msgid ""
+"Leben in Regionen, die besonders anfällig für die Folgen des Klimawandels "
+"sind."
+msgstr ""
+"live in regions that are especially vulnerable to the impacts of climate "
+"change."
+
+#: home/templates/home.html:671
+msgid "Etwa 4 von 10 Menschen weltweit."
+msgstr "About 4 in 10 people worldwide."
+
+#: home/templates/home.html:672
+msgid "Quelle: IPCC, Sechster Sachstandsbericht, Arbeitsgruppe II (2022)"
+msgstr "Source: IPCC, Sixth Assessment Report, Working Group II (2022)"
+
+#: home/templates/home.html:673
+msgid "Und jetzt?"
+msgstr "So what now?"
+
+#: home/templates/home.html:687 home/templates/home.html:689
+msgid "Warum ClimateQuest"
+msgstr "Why ClimateQuest"
+
+#: home/templates/home.html:691
+msgid "Gut, dass du <em>dabei</em> bist."
+msgstr "Good to have you <em>on board</em>."
+
+#: home/templates/home.html:692
+msgid ""
+"Mach heute weiter, wo du aufgehört hast, und halte deine Streak am Leben."
+msgstr "Pick up where you left off today and keep your streak alive."
+
+#: home/templates/home.html:694
+msgid "Du kannst mehr bewirken, als du denkst."
+msgstr "You can make more of a difference than you think."
+
+#: home/templates/home.html:695
+msgid ""
+"ClimateQuest macht Klimaschutz zum Spiel. Du trägst ein, was du tust, und "
+"siehst sofort, was es bringt."
+msgstr ""
+"ClimateQuest turns climate action into a game. You log what you do and "
+"instantly see what it achieves."
+
+#: home/templates/home.html:702
+msgid "Klimapunkte sammeln"
+msgstr "Collect Climate Points"
+
+#: home/templates/home.html:703
+msgid ""
+"Vom Zug statt Flug bis zur Mahlzeit ohne Fleisch. Ein Punkt steht für etwa 1"
+" kg eingespartes CO₂."
+msgstr ""
+"From taking the train instead of flying to a meat-free meal. One point "
+"stands for roughly 1 kg of CO₂ saved."
+
+#: home/templates/home.html:709
+msgid "Dranbleiben macht Spaß"
+msgstr "Staying on track is fun"
+
+#: home/templates/home.html:710
+msgid "Level, Streaks und Wochenziele halten dich in Bewegung."
+msgstr "Levels, streaks and weekly goals keep you moving."
+
+#: home/templates/home.html:716
+msgid "Bäume pflanzen"
+msgstr "Plant trees"
+
+#: home/templates/home.html:717
+msgid "Mit deinem Einsatz pflanzt du in der App Bäume."
+msgstr "Your efforts plant trees in the app."
+
+#: home/templates/home.html:723
+msgid "Gemeinsam mehr schaffen"
+msgstr "Achieve more together"
+
+#: home/templates/home.html:724
+msgid ""
+"Vergleiche dich, gründe eine Family, nimm an Events und Petitionen teil."
+msgstr ""
+"Compare yourself with others, start a family, and take part in events and "
+"petitions."
+
+#: home/templates/home.html:729
+msgid "Aktion hinzufügen"
+msgstr "Add Action"
+
+#: home/templates/home.html:731 home/templates/home.html:827
+#: home/templates/home.html:848
+msgid "Jetzt registrieren!"
+msgstr "Sign up now!"
+
+#: home/templates/home.html:738
+msgid "Was wir erreicht haben"
+msgstr "What we've achieved"
+
+#: home/templates/home.html:740
+msgid "Das hat die Community schon geschafft"
+msgstr "What the community has already accomplished"
+
+#: home/templates/home.html:742
+msgid "registrierte Nutzer"
+msgstr "registered users"
+
+#: home/templates/home.html:745
+msgid "gesammelte Klimapunkte"
+msgstr "Climate Points collected"
+
+#: home/templates/home.html:747
+msgid "Tonnen CO₂e eingespart"
+msgstr "tonnes of CO₂e saved"
+
+#: home/templates/home.html:750
+msgid "gepflanzte Bäume"
+msgstr "trees planted"
+
+#: home/templates/home.html:753
+msgid "Erfolgsgeschichten"
+msgstr "success stories"
+
+#: home/templates/home.html:763
 msgid "Bild eines Zugs"
 msgstr "Picture of a train"
 
-#: home/templates/home.html:189
-msgid "Bild eines veganes Gerichts"
-msgstr "Picture of a vegan dish"
-
-#: home/templates/home.html:211
-msgid "Bild eines Mailprogramms"
-msgstr "Picture of an email program"
-
-#: home/templates/home.html:229
-msgid ""
-"User BrunnerL3 wurde durch ClimateQuest dazu motiviert, einen Baum zu "
-"pflanzen"
-msgstr "User BrunnerL3 was motivated by ClimateQuest to plant a tree"
-
-#: home/templates/home.html:230
+#: home/templates/home.html:765
 msgid ""
 "User Maradona wurde durch ClimateQuest dazu motiviert, mit dem Zug statt mit"
 " dem Flugzeug zu reisen"
@@ -987,93 +1174,129 @@ msgstr ""
 "User Maradona was motivated by ClimateQuest to travel by train instead of by"
 " plane"
 
-#: home/templates/home.html:231
+#: home/templates/home.html:776
+msgid "Bild eines veganes Gerichts"
+msgstr "Picture of a vegan dish"
+
+#: home/templates/home.html:778
 msgid ""
 "User Jessi wurde durch ClimateQuest dazu motiviert, weniger Käse zu essen"
 msgstr "User Jessi was motivated by ClimateQuest to eat less cheese"
 
-#: home/templates/home.html:232
+#: home/templates/home.html:789
+msgid "Bild eines Mailprogramms"
+msgstr "Picture of an email program"
+
+#: home/templates/home.html:791
 msgid ""
 "User Jessi wurde durch ClimateQuest dazu motiviert, E-Mails regelmäßig zu "
 "löschen"
 msgstr "User Jessi was motivated by ClimateQuest to regularly delete emails"
 
-#: home/templates/home.html:282
-msgid "Jetzt registrieren!"
-msgstr "Sign up now!"
+#: home/templates/home.html:802
+msgid "Bild, auf dem ein Baum gepflanzt wird"
+msgstr "Picture of a tree being planted"
 
-#: home/templates/home.html:286
-msgid "Übersicht"
-msgstr "Overview"
-
-#: home/templates/home.html:295
-msgid "registrierte Nutzer hat diese Plattform bereits."
-msgstr "users have already registered on this platform."
-
-#: home/templates/home.html:300
-msgid "Klimapunkte wurden von all diesen Nutzern zusammen bereits gesammelt."
-msgstr ""
-"climate points have already been collected by all these users combined."
-
-#: home/templates/home.html:304
+#: home/templates/home.html:804
 msgid ""
-"Weil jeder Klimapunkt ungefähr für <b id=\"co2_per_klimapunkt\">1 kg</b> eingespartes CO₂\n"
-"                steht, wurden dadurch insgesamt"
+"User BrunnerL3 wurde durch ClimateQuest dazu motiviert, einen Baum zu "
+"pflanzen"
+msgstr "User BrunnerL3 was motivated by ClimateQuest to plant a tree"
+
+#: home/templates/home.html:813
+msgid "So funktioniert es"
+msgstr "How it works"
+
+#: home/templates/home.html:815
+msgid "So funktioniert ClimateQuest"
+msgstr "How ClimateQuest works"
+
+#: home/templates/home.html:816
+msgid "In drei Schritten vom Vorsatz zur Gewohnheit."
+msgstr "From resolution to habit in three steps."
+
+#: home/templates/home.html:819
+msgid "Wähle aus, was du heute fürs Klima getan hast."
+msgstr "Choose what you did for the climate today."
+
+#: home/templates/home.html:820
+msgid "Klimapunkte erhalten"
+msgstr "Earn Climate Points"
+
+#: home/templates/home.html:821
+msgid "Du siehst sofort, wie viel CO₂ du gespart hast."
+msgstr "You instantly see how much CO₂ you've saved."
+
+#: home/templates/home.html:822
+msgid "Level aufsteigen"
+msgstr "Level up"
+
+#: home/templates/home.html:823
+msgid ""
+"Steig im Level auf, erreiche Wochenziele, verlänger deine Streak, vergleich "
+"dich mit Freunden und pflanze Bäume."
 msgstr ""
-"Since each climate point represents approximately <b "
-"id=\"co2_per_klimapunkt\">1 kg</b> of CO₂ saved, a total of"
+"Level up, reach weekly goals, extend your streak, compare yourself with "
+"friends and plant trees."
 
-#: home/templates/home.html:307
-msgid "Tonnen CO2e eingespart."
-msgstr "tonnes of CO2e have been saved."
-
-#: home/templates/home.html:311
-msgid "Außerdem wurden insgesamt"
-msgstr "In addition, a total of"
-
-#: home/templates/home.html:313
-msgid "Bäume gepflanzt."
-msgstr "trees have been planted."
-
-#: home/templates/home.html:325
-msgid "Keine Lust, ClimateQuest als Webseite zu verwenden?"
-msgstr "Not keen on using ClimateQuest as a website?"
-
-#: home/templates/home.html:327
-msgid "ClimateQuest als App downloaden"
-msgstr "Download ClimateQuest as an app"
-
-#: home/templates/home.html:338
-msgid "Artikel von Plant-for-the-Planet über ClimateQuest"
-msgstr "Article by Plant-for-the-Planet about ClimateQuest"
-
-#: home/templates/home.html:344
-msgid "Bewerten Sie uns auf Trustpilot"
-msgstr "Rate us on Trustpilot"
-
-#: home/templates/home.html:357
+#: home/templates/home.html:830
 msgid "Wie ClimateQuest funktioniert"
 msgstr "How ClimateQuest works"
 
-#: home/templates/home.html:361
-msgid "Aktion hinzufügen"
-msgstr "Add Action"
+#: home/templates/home.html:836
+msgid "Mach mit"
+msgstr "Join in"
 
-#: home/templates/home.html:365
-msgid "Family gründen"
-msgstr "Create a Family"
+#: home/templates/home.html:838
+msgid "Dein Start"
+msgstr "Your start"
 
-#: home/templates/home.html:368
-msgid "Family beitreten"
-msgstr "Join a Family"
+#: home/templates/home.html:840
+msgid "Weiter geht's, <em>Klimaheld</em>."
+msgstr "Let's keep going, <em>climate hero</em>."
+
+#: home/templates/home.html:841
+msgid "Dein Dashboard wartet auf deine nächste Aktion."
+msgstr "Your dashboard is waiting for your next action."
+
+#: home/templates/home.html:845
+msgid "Der erste Schritt ist ein <em>Klick</em>."
+msgstr "The first step is a <em>click</em>."
+
+#: home/templates/home.html:846
+msgid "Werde Teil der Community, die Klimaschutz jeden Tag einfacher macht."
+msgstr ""
+"Become part of the community that makes climate action easier every day."
+
+#: home/templates/home.html:852
+msgid "ClimateQuest als App downloaden"
+msgstr "Download ClimateQuest as an app"
+
+#: home/templates/home.html:855
+msgid "Artikel von Plant-for-the-Planet über ClimateQuest"
+msgstr "Article by Plant-for-the-Planet about ClimateQuest"
+
+#: home/templates/home.html:858
+msgid "Bewerten Sie uns auf Trustpilot"
+msgstr "Rate us on Trustpilot"
+
+#: home/templates/home.html:861 home/templates/nutzungsbedingungen.html:7
+#: home/templates/nutzungsbedingungen.html:10
+msgid "Nutzungsbedingungen"
+msgstr "Terms of Use"
+
+#: home/templates/home.html:862 home/templates/impressum.html:6
+#: home/templates/impressum.html:9
+msgid "Impressum"
+msgstr "Legal Notice"
+
+#: home/templates/home.html:863
+msgid "Datenschutz"
+msgstr "Privacy"
 
 #: home/templates/impressum.html:4
 msgid "Das Impressum von ClimateQuest."
 msgstr "The legal notice of ClimateQuest."
-
-#: home/templates/impressum.html:6 home/templates/impressum.html:9
-msgid "Impressum"
-msgstr "Legal Notice"
 
 #: home/templates/impressum.html:16 home/templates/support.html:8
 #: home/templates/support.html:11
@@ -1162,11 +1385,6 @@ msgid ""
 msgstr ""
 "The terms of use of ClimateQuest are intended to ensure that the platform is"
 " not misused, but only follows the goal of actually helping the climate."
-
-#: home/templates/nutzungsbedingungen.html:7
-#: home/templates/nutzungsbedingungen.html:10
-msgid "Nutzungsbedingungen"
-msgstr "Terms of Use"
 
 #: home/templates/nutzungsbedingungen.html:17
 msgid "1. Allgemeines"
@@ -1557,3 +1775,32 @@ msgid ""
 msgstr ""
 "Do you have questions or need support? Just send an email to <a "
 "href=\"mailto:info@climate-quest.de\">info@climate-quest.de</a>!"
+
+#~ msgid "Übersicht"
+#~ msgstr "Overview"
+
+#~ msgid "registrierte Nutzer hat diese Plattform bereits."
+#~ msgstr "users have already registered on this platform."
+
+#~ msgid "Klimapunkte wurden von all diesen Nutzern zusammen bereits gesammelt."
+#~ msgstr ""
+#~ "climate points have already been collected by all these users combined."
+
+#~ msgid ""
+#~ "Weil jeder Klimapunkt ungefähr für <b id=\"co2_per_klimapunkt\">1 kg</b> eingespartes CO₂\n"
+#~ "                steht, wurden dadurch insgesamt"
+#~ msgstr ""
+#~ "Since each climate point represents approximately <b "
+#~ "id=\"co2_per_klimapunkt\">1 kg</b> of CO₂ saved, a total of"
+
+#~ msgid "Außerdem wurden insgesamt"
+#~ msgstr "In addition, a total of"
+
+#~ msgid "Keine Lust, ClimateQuest als Webseite zu verwenden?"
+#~ msgstr "Not keen on using ClimateQuest as a website?"
+
+#~ msgid "Family gründen"
+#~ msgstr "Create a Family"
+
+#~ msgid "Family beitreten"
+#~ msgstr "Join a Family"

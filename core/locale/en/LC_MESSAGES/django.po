@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-02 10:55+0100\n"
+"POT-Creation-Date: 2026-11-23 17:49+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -62,7 +62,6 @@ msgid "Ein oder mehrere Input-Felder sind zu lang"
 msgstr "One or more input fields are too long"
 
 #: core/all_messages.py:19
-#| msgid "Der Input muss eine Zahl sein"
 msgid "Die Dauer muss eine positive Zahl sein"
 msgstr "The duration must be a positive number"
 
@@ -71,7 +70,6 @@ msgid "Der Input muss eine Zahl sein"
 msgstr "The input must be a number."
 
 #: core/all_messages.py:21
-#| msgid "Das wöchentliche Ziel ist zu klein"
 msgid "Das wöchentliche Ziel ist zu groß"
 msgstr "The weekly goal is too large"
 
@@ -100,7 +98,6 @@ msgid "Ungültiger Zeitraum"
 msgstr "Invalid time period"
 
 #: core/all_messages.py:33
-#| msgid "Family ist bereits Teil der Community"
 msgid "Diese Family ist nicht Mitglied der Community"
 msgstr "This family is not a member of the community"
 
@@ -356,13 +353,13 @@ msgid ""
 "E-Mail-Adresse erfolgreich geändert. Ein Aktivierungslink wurde an diese "
 "Adresse gesendet"
 msgstr ""
-"Email address successfully changed. An activation link has been sent to this"
-" address"
+"Email address successfully changed. An activation link has been sent to this "
+"address"
 
 #: core/all_messages.py:122
 msgid ""
-"E-Mail-Adresse erfolgreich geändert. Du hast jetzt keine E-Mail Adresse mehr"
-" hinterlegt und musst daher nichts verifizieren"
+"E-Mail-Adresse erfolgreich geändert. Du hast jetzt keine E-Mail Adresse mehr "
+"hinterlegt und musst daher nichts verifizieren"
 msgstr ""
 "Email address successfully changed. You no longer have an email address on "
 "file and therefore do not need to verify anything"
@@ -465,8 +462,8 @@ msgstr "Action successfully deleted"
 #: core/all_messages.py:154
 msgid ""
 "Die angegebene Menge ist zu hoch, um realistisch zu sein. Weitere "
-"Informationen findest du in <a href='https://climate-"
-"quest.de/artikel/artikel_detail/9'>diesem Artikel</a>"
+"Informationen findest du in <a href='https://climate-quest.de/artikel/"
+"artikel_detail/9'>diesem Artikel</a>"
 msgstr ""
 "The specified quantity is too high to be realistic. For more information, "
 "see <a href='https://climate-quest.de/artikel/artikel_detail/9'>this "
@@ -475,8 +472,8 @@ msgstr ""
 #: core/all_messages.py:159
 msgid ""
 "Das angegebene Datum liegt zu weit in der Vergangenheit. Weitere "
-"Informationen findest du in <a href='https://climate-"
-"quest.de/artikel/artikel_detail/18'>diesem Artikel</a>"
+"Informationen findest du in <a href='https://climate-quest.de/artikel/"
+"artikel_detail/18'>diesem Artikel</a>"
 msgstr ""
 "The specified date is too far in the past. For more information, see <a "
 "href='https://climate-quest.de/artikel/artikel_detail/18'>this article</a>"
@@ -493,8 +490,8 @@ msgstr "Action is now being tracked"
 
 #: core/all_messages.py:167
 msgid ""
-"Aktion kann nicht getrackt werden, da eine verwandte Aktion bereits getrackt"
-" wird."
+"Aktion kann nicht getrackt werden, da eine verwandte Aktion bereits getrackt "
+"wird."
 msgstr "Action can't be tracked because a related action is already tracked."
 
 #: core/all_messages.py:169

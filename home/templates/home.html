@@ -55,6 +55,10 @@
             color: inherit;
         }
 
+        .hq-root a.hq-brand:hover {
+            color: var(--hq-deep);
+        }
+
         .hq-root :is(h1, h2, h3) {
             margin-top: 0;
         }
@@ -552,6 +556,11 @@
         .hq-msgs .success-message { color: #176d3b; }
 
         @media (min-width: 900px) {
+            /* Desktop: no bottom tab bar on the start page, so no white strip */
+            .hq-root { --hq-tabbar: 0px; }
+            body:has(.hq-stage) .tabbar { display: none; }
+            body:has(.hq-stage) { padding-left: 0; padding-right: 0; }
+            .hq-stage, .hq-panel { width: 100%; }
             .hq-brand small { display: inline; }
             .hq-brand small::before { content: "\00b7\00a0"; }
             .hq-inner { padding-right: calc(var(--hq-gutter-r) + 40px); }
@@ -811,7 +820,7 @@
                         <li><h3>{% trans "Klimapunkte erhalten" %}</h3>
                             <p>{% trans "Du siehst sofort, wie viel CO₂ du gespart hast." %}</p></li>
                         <li><h3>{% trans "Level aufsteigen" %}</h3>
-                            <p>{% trans "Verlängere deine Streak, erreiche Wochenziele und pflanze Bäume." %}</p></li>
+                            <p>{% trans "Steig im Level auf, erreiche Wochenziele, verlänger deine Streak, vergleich dich mit Freunden und pflanze Bäume." %}</p></li>
                     </ol>
                     <div class="hq-row">
                         {% if not user.is_authenticated %}
