@@ -3,402 +3,967 @@
 {% load development %}
 {% load production %}
 {% load i18n %}
+{% load l10n %}
 {% block meta %}
     <meta name="description"
           content="{% blocktrans %}Willkommen bei ClimateQuest. Motiviere dich selbst für mehr Klimaschutz, indem du Klimapunkte sammelst, dich mit anderen Usern vergleichst, dein Level erhöhst, deine Streak verlängerst und in der App Bäume pflanzt. Teile dein Wissen in Artikeln oder im Forum und werde aktiv bei Petitionen oder Events.{% endblocktrans %}">
-    <link rel="stylesheet" href="{% static 'libraries/splide/splide.min.css' %}">
 {% endblock %}
 {% block title %}{% trans "Startseite" %}{% endblock %}
 
 {% block content %}
     <style nonce="{{ request.csp_style_nonce }}">
-        #counters {
+        /* ClimateQuest start page.
+           Layout: full-screen chapters that snap one at a time (swipe feel).
+           Blue = the problem (3 numbers), green = the answer (why register), mint = proof,
+           light = how it works, forest = call to action.
+           Sticky pill: "Registrieren" for visitors, "Zum Dashboard" for logged-in users. */
+        html:has(.hq-stage) {
+            overflow: hidden;
+        }
+
+        .hq-root {
+            --hq-blue: var(--color-primary, #0433ff);
+            --hq-blue-2: #0326cf;
+            --hq-navy: #07125e;
+            --hq-forest: #074e3b;
+            --hq-deep: #03392d;
+            --hq-leaf: #b3e199;
+            --hq-mint: var(--color-bg-dark, #e0f7e9);
+            --hq-bg: var(--color-bg, #f4f6f8);
+            --hq-text: var(--color-text, #333);
+            --hq-counter: var(--color-counters, #3a6b4f);
+            --hq-success: var(--color-success, #2ecc71);
+            --hq-success-hover: #27ae60;
+            --hq-on-blue: rgba(255, 255, 255, .86);
+            --hq-tabbar: calc(60px + max(0px, var(--safe-area-inset-bottom, 0px)));
+            --hq-gutter-l: max(16px, env(safe-area-inset-left, 0px));
+            --hq-gutter-r: max(16px, env(safe-area-inset-right, 0px));
+            color: #fff;
+            line-height: 1.45;
+        }
+
+        .hq-root *, .hq-root *::before, .hq-root *::after {
+            box-sizing: border-box;
+        }
+
+        .hq-root :focus-visible {
+            outline: 3px solid var(--hq-leaf);
+            outline-offset: 3px;
+        }
+
+        .hq-root a:hover {
+            color: inherit;
+        }
+
+        .hq-root :is(h1, h2, h3) {
+            margin-top: 0;
+        }
+
+        /* ---------- stage + panels ---------- */
+        .hq-stage {
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: var(--hq-tabbar);
+            overflow-y: auto;
+            overflow-x: hidden;
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+            overscroll-behavior: contain;
+            outline: none;
+            background: var(--hq-blue);
+            hyphens: manual;
+        }
+
+        .hq-panel {
+            min-height: 100%;
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
             display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            padding-block: 88px 104px;
+        }
+
+        .hq-inner {
+            width: min(1100px, 100%);
+            margin-inline: auto;
+            padding-left: var(--hq-gutter-l);
+            padding-right: var(--hq-gutter-r);
+            position: relative;
+        }
+
+        .hq-blue1 { background: var(--hq-blue); }
+        .hq-blue2 { background: var(--hq-blue-2); }
+        .hq-navy { background: var(--hq-navy); }
+        .hq-green { background: var(--hq-deep); }
+        .hq-mint { background: var(--hq-mint); color: var(--hq-text); }
+        .hq-light { background: var(--hq-bg); color: var(--hq-text); }
+        .hq-final { background: var(--hq-forest); }
+
+        .hq-eyebrow {
+            font-size: .85rem;
+            font-weight: 700;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: var(--hq-on-blue);
+            margin: 0 0 1rem;
+            display: flex;
+            gap: .75rem;
+            align-items: center;
             flex-wrap: wrap;
-            gap: 2rem;
-            justify-content: center;
-            padding: 2rem;
-            background: var(--color-counters-bg);
+        }
+
+        .hq-eyebrow .hq-step {
+            padding: .15rem .6rem;
+            border: 1.5px solid currentColor;
+            border-radius: 30px;
+            letter-spacing: .06em;
+        }
+
+        .hq-mint .hq-eyebrow, .hq-light .hq-eyebrow { color: var(--hq-counter); }
+        .hq-green .hq-eyebrow, .hq-final .hq-eyebrow { color: var(--hq-leaf); }
+
+        /* ---------- stat chapters ---------- */
+        .hq-big {
+            display: flex;
+            align-items: baseline;
+            flex-wrap: wrap;
+            column-gap: .25em;
+            row-gap: .1em;
+            padding-bottom: .08em;
+            line-height: .9;
+            font-weight: 800;
+            letter-spacing: -.045em;
+            font-variant-numeric: tabular-nums;
+            transform: translateY(calc(var(--p, 0) * 70px)) scale(calc(1 - var(--p, 0) * var(--p, 0) * .12));
+            transform-origin: left center;
+            will-change: transform;
+        }
+
+        .hq-num { font-size: clamp(5.5rem, min(22vw, 30vh), 16rem); }
+
+        .hq-unit {
+            font-size: clamp(1.6rem, min(5vw, 8vh), 4.5rem);
+            letter-spacing: -.03em;
+            color: var(--hq-leaf);
+        }
+
+        .hq-lede {
+            font-size: clamp(1.25rem, 2.6vw, 2rem);
+            line-height: 1.25;
+            font-weight: 600;
+            max-width: 30ch;
+            margin: 1.75rem 0 .75rem;
+            text-wrap: balance;
+        }
+
+        .hq-sub {
+            font-size: clamp(1rem, 1.5vw, 1.2rem);
+            color: var(--hq-on-blue);
+            max-width: 52ch;
+            margin: 0 0 1.25rem;
+        }
+
+        .hq-source {
+            font-size: .8rem;
+            color: rgba(255, 255, 255, .72);
+            margin: 0;
+        }
+
+        .hq-next {
+            display: inline-flex;
+            align-items: center;
+            gap: .6rem;
+            margin-top: 1.5rem;
+            background: none;
+            border: 1.5px solid rgba(255, 255, 255, .5);
+            color: #fff;
+            border-radius: 30px;
+            padding: .55rem 1.1rem;
+            font: inherit;
+            font-weight: 600;
+            cursor: pointer;
+            min-height: 44px;
+        }
+
+        .hq-next:hover { background: rgba(255, 255, 255, .14); }
+        .hq-next svg { animation: hq-bob 1.6s ease-in-out infinite; }
+
+        @keyframes hq-bob { 50% { transform: translateY(4px); } }
+
+        .hq-ticker {
+            display: inline-flex;
+            flex-direction: column;
+            margin: 1rem 0 1.25rem;
+            padding: .9rem 1.25rem;
             border-radius: 12px;
-            box-shadow: var(--shadow-md);
-            font-family: 'Segoe UI', sans-serif;
-            margin: 20px;
+            background: rgba(255, 255, 255, .12);
         }
 
-        #counters > div {
-            flex: 1 1 300px;
-            background: var(--color-bg);
-            border: 1px solid var(--color-border);
-            border-radius: 10px;
-            padding: 1.5rem;
-            text-align: center;
-            transition: transform 0.3s ease;
+        .hq-ticker b {
+            font-size: clamp(1.8rem, 5vw, 3rem);
+            font-variant-numeric: tabular-nums;
+            letter-spacing: -.02em;
+            line-height: 1.1;
         }
 
-        #counters > div:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-md);
+        .hq-ticker span { font-size: .95rem; color: var(--hq-on-blue); }
+
+        .hq-people {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: clamp(.4rem, 1.2vw, .9rem);
+            max-width: 560px;
+            margin: 1.75rem 0 .5rem;
         }
 
-        #counters .h3_size {
-            font-size: 2.5rem;
-            margin: 0.5rem 0;
-            color: var(--color-counters);
-            font-weight: bold;
+        .hq-people i {
+            aspect-ratio: 1;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, .55);
         }
 
-        #counters p {
-            font-size: 1rem;
-            margin: 0.5rem 0;
-            color: var(--color-text);
+        .hq-people i:nth-child(-n+4) { background: var(--hq-leaf); border-color: var(--hq-leaf); }
+        .hq-navy.is-active .hq-people i:nth-child(-n+4) { animation: hq-pop .5s cubic-bezier(.3, 1.6, .5, 1) both; }
+        .hq-navy.is-active .hq-people i:nth-child(1) { animation-delay: .5s; }
+        .hq-navy.is-active .hq-people i:nth-child(2) { animation-delay: .65s; }
+        .hq-navy.is-active .hq-people i:nth-child(3) { animation-delay: .8s; }
+        .hq-navy.is-active .hq-people i:nth-child(4) { animation-delay: .95s; }
+
+        @keyframes hq-pop { from { transform: scale(.3); opacity: .2; background: transparent; } }
+
+        .hq-people-note { font-size: .95rem; color: var(--hq-on-blue); margin: 0 0 1rem; }
+
+        /* ---------- why register ---------- */
+        .hq-h-xl {
+            font-size: clamp(2.2rem, 6.5vw, 5rem);
+            line-height: 1;
+            font-weight: 800;
+            letter-spacing: -.035em;
+            margin: 0 0 1rem;
+            max-width: 16ch;
+            text-wrap: balance;
         }
 
-        #co2_per_klimapunkt {
-            font-weight: bold;
-            color: var(--color-counters);
+        .hq-h-xl em { font-style: normal; color: var(--hq-leaf); }
+
+        .hq-h-lg {
+            font-size: clamp(1.8rem, 4.5vw, 3.2rem);
+            line-height: 1.05;
+            font-weight: 800;
+            letter-spacing: -.03em;
+            margin: 0 0 1.5rem;
+            max-width: 20ch;
+            text-wrap: balance;
+            color: var(--hq-forest);
         }
 
-        .slider-heading {
-            position: absolute;
-            color: white;
-            text-align: center;
-            top: 160px;
-            left: 50%;
-            transform: translateX(-50%) translateY(20px);
-            font-size: 3rem;
-            opacity: 0;
-            animation: fadeUp 1.2s ease-out forwards;
-            z-index: 20;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
-            pointer-events: none;
+        .hq-intro {
+            font-size: clamp(1.05rem, 1.7vw, 1.3rem);
+            max-width: 46ch;
+            margin: 0 0 1.75rem;
+            color: rgba(255, 255, 255, .86);
         }
 
-        @keyframes fadeUp {
-            from {
-                opacity: 0;
-                transform: translateX(-50%) translateY(40px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(-50%) translateY(0);
-            }
+        .hq-benefits {
+            list-style: none;
+            margin: 0 0 1.75rem;
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
         }
 
-        @media (max-width: 1200px) {
-            .slider-heading {
-                position: static;
-                transform: none;
-                text-align: center;
-                font-size: 2rem;
-                margin: 20px 0;
-                animation: fadeUpMobile 1.2s ease-out forwards;
-                color: var(--color-text);
-            }
-
-            @keyframes fadeUpMobile {
-                from {
-                    opacity: 0;
-                    transform: translateY(20px);
-                }
-                to {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-            }
+        .hq-benefits li {
+            background: rgba(255, 255, 255, .08);
+            border: 1px solid rgba(179, 225, 153, .28);
+            border-radius: 16px;
+            padding: 1.1rem 1.25rem;
+            min-width: 0;
         }
 
+        .hq-benefits svg { color: var(--hq-leaf); margin-bottom: .5rem; }
+        .hq-benefits h3 { margin: 0 0 .25rem; font-size: 1.1rem; }
+        .hq-benefits p { margin: 0; font-size: .95rem; color: rgba(255, 255, 255, .84); }
 
-        #mobile-app-div {
-            display: none;
-        }
-    </style>
-    {% if user.is_authenticated %}
-        <a href="{% url 'dashboard' %}" class="redirect-link ">
-            <span>{% trans "Zum Dashboard" %}</span>
-            <span class="redirect-link-icon">→</span>
-        </a>
-    {% endif %}
-
-    <h1 class="slider-heading">{% trans "ClimateQuest - Motivation für mehr Klimaschutz" %}</h1>
-    <section class="splide" aria-label="ClimateQuest achievement examples">
-        <div class="splide__track">
-            <ul class="splide__list">
-                <li class="splide__slide">
-                    <picture class="active">
-                        <source type="image/avif" srcset="
-                    {% static 'images/ice-train/ice-train-320.avif' %} 320w,
-                    {% static 'images/ice-train/ice-train-640.avif' %} 640w,
-                    {% static 'images/ice-train/ice-train-1280.avif' %} 1280w
-                    " sizes="100vw"
-                        >
-
-                        <source type="image/webp" srcset="
-                    {% static 'images/ice-train/ice-train-320.webp' %} 320w,
-                    {% static 'images/ice-train/ice-train-640.webp' %} 640w,
-                    {% static 'images/ice-train/ice-train-1280.webp' %} 1280w
-                    " sizes="100vw"
-                        >
-
-                        <img src="{% static 'images/ice-train/ice-train-fallback.jpg' %}"
-                             alt="{% trans 'Bild eines Zugs' %}" loading="lazy">
-                    </picture>
-                </li>
-                <li class="splide__slide">
-                    <picture>
-                        <source type="image/avif" srcset="
-                    {% static 'images/vegan/vegan-320.avif' %} 320w,
-                    {% static 'images/vegan/vegan-640.avif' %} 640w,
-                    {% static 'images/vegan/vegan-1280.avif' %} 1280w
-                    " sizes="100vw"
-                        >
-
-                        <source type="image/webp" srcset="
-                    {% static 'images/vegan/vegan-320.webp' %} 320w,
-                    {% static 'images/vegan/vegan-640.webp' %} 640w,
-                    {% static 'images/vegan/vegan-1280.webp' %} 1280w
-                    " sizes="100vw"
-                        >
-
-                        <img src="{% static 'images/vegan/vegan-fallback.jpg' %}"
-                             alt="{% trans 'Bild eines veganes Gerichts' %}" loading="lazy">
-                    </picture>
-                </li>
-                <li class="splide__slide">
-                    <picture>
-                        <source type="image/avif" srcset="
-                    {% static 'images/mail/mail-320.avif' %} 320w,
-                    {% static 'images/mail/mail-640.avif' %} 640w,
-                    {% static 'images/mail/mail-1280.avif' %} 1280w
-                    " sizes="100vw"
-                        >
-
-                        <source type="image/webp" srcset="
-                    {% static 'images/mail/mail-320.webp' %} 320w,
-                    {% static 'images/mail/mail-640.webp' %} 640w,
-                    {% static 'images/mail/mail-1280.webp' %} 1280w
-                    " sizes="100vw"
-                        >
-
-                        <img src="{% static 'images/mail/mail-fallback.jpg' %}"
-                             alt="{% trans 'Bild eines Mailprogramms' %}" loading="lazy">
-                    </picture>
-                </li>
-                <li class="splide__slide">
-                    <picture>
-                        <source type="image/avif" srcset="
-                    {% static 'images/plant-tree/plant-tree-320.avif' %} 320w,
-                    {% static 'images/plant-tree/plant-tree-640.avif' %} 640w,
-                    {% static 'images/plant-tree/plant-tree-1280.avif' %} 1280w
-                    " sizes="100vw"
-                        >
-
-                        <source type="image/webp" srcset="
-                    {% static 'images/plant-tree/plant-tree-320.webp' %} 320w,
-                    {% static 'images/plant-tree/plant-tree-640.webp' %} 640w,
-                    {% static 'images/plant-tree/plant-tree-1280.webp' %} 1280w
-                    " sizes="100vw"
-                        >
-
-                        <img src="{% static 'images/plant-tree/plant-tree-fallback.jpg' %}"
-                             alt="{% trans 'Bild, auf dem ein Baum gepflanzt wird' %}">
-                    </picture>
-                </li>
-            </ul>
-        </div>
-    </section>
-    <p class="splide__caption" id="splide__caption"></p>
-
-    <script src="{% static 'libraries/splide/splide.min.js' %}"></script>
-    <script nonce="{{ request.csp_script_nonce }}">
-        const splide = new Splide('.splide', {
-            type: 'loop',
-            rewind: true,
-            rewindByDrag: true,
-        }).mount();
-
-        const caption = document.querySelector('.splide__caption');
-        const caption_list = {
-            0: '{% trans "User Maradona wurde durch ClimateQuest dazu motiviert, mit dem Zug statt mit dem Flugzeug zu reisen" %}',
-            1: '{% trans "User Jessi wurde durch ClimateQuest dazu motiviert, weniger Käse zu essen" %}',
-            2: '{% trans "User Jessi wurde durch ClimateQuest dazu motiviert, E-Mails regelmäßig zu löschen" %}',
-            3: '{% trans "User BrunnerL3 wurde durch ClimateQuest dazu motiviert, einen Baum zu pflanzen" %}',
+        /* ---------- proof ---------- */
+        .hq-counters {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin: 0 0 1.5rem;
         }
 
-        splide.on('move', function (newIndex) {
-            changeCaption(newIndex);
-        });
-
-        function changeCaption(index) {
-            caption.textContent = caption_list[index];
+        .hq-counter {
+            background: #fff;
+            border: 1px solid var(--color-border-green, #b2dfdb);
+            border-radius: 12px;
+            padding: 1rem 1.1rem;
+            box-shadow: var(--shadow-md, 0 2px 10px rgba(0, 0, 0, .06));
+            min-width: 0;
         }
 
-        changeCaption(0);
-    </script>
-    <style nonce="{{ request.csp_style_nonce }}">
-        @media (max-width: 1200px) {
-            .splide__pagination__page {
-                min-height: unset !important;
-                min-width: unset !important;
-                display: block !important;
-            }
+        .hq-counter b {
+            display: block;
+            font-size: clamp(1.7rem, 4vw, 3rem);
+            line-height: 1.05;
+            letter-spacing: -.03em;
+            color: var(--hq-counter);
+            font-variant-numeric: tabular-nums;
         }
 
-        .splide__arrow {
-            transform: unset !important;
+        .hq-counter span { font-size: .92rem; }
+
+        .hq-stories {
+            list-style: none;
+            margin: 0;
+            padding: 0 0 .5rem;
+            display: grid;
+            grid-auto-flow: column;
+            grid-auto-columns: minmax(240px, 1fr);
+            gap: 1rem;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            overscroll-behavior-x: contain;
         }
 
-        .splide__caption {
-            color: #67626d;
+        .hq-stories li {
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+            background: #fff;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow-md, 0 2px 10px rgba(0, 0, 0, .06));
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
         }
 
-        .splide__slide img {
+        .hq-stories img {
             width: 100%;
-            height: 100%;
+            aspect-ratio: 16 / 10;
             object-fit: cover;
             display: block;
         }
+
+        .hq-stories p { margin: 0; padding: .8rem 1rem 1rem; font-size: .92rem; }
+
+        .hq-link {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            font-weight: 700;
+            text-decoration: none;
+            margin-top: 1rem;
+            min-height: 44px;
+            color: var(--hq-forest);
+        }
+
+        .hq-link span:last-child { transition: transform .2s; }
+        .hq-link:hover span:last-child { transform: translateX(4px); }
+
+        /* ---------- how ---------- */
+        .hq-steps {
+            list-style: none;
+            margin: 0 0 2rem;
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 1.25rem;
+            counter-reset: hq-s;
+        }
+
+        .hq-steps li {
+            counter-increment: hq-s;
+            background: #fff;
+            border-radius: 16px;
+            padding: 1.4rem;
+            box-shadow: var(--shadow-md, 0 2px 10px rgba(0, 0, 0, .06));
+            min-width: 0;
+        }
+
+        .hq-steps li::before {
+            content: counter(hq-s);
+            display: grid;
+            place-items: center;
+            width: 2.4rem;
+            height: 2.4rem;
+            border-radius: 50%;
+            background: var(--hq-blue);
+            color: #fff;
+            font-weight: 800;
+            margin-bottom: .8rem;
+        }
+
+        .hq-steps h3 { margin: 0 0 .3rem; font-size: 1.2rem; color: var(--hq-forest); }
+        .hq-steps p { margin: 0; }
+
+        /* ---------- final ---------- */
+        .hq-final-links {
+            list-style: none;
+            margin: 2rem 0 0;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: .25rem 1.75rem;
+        }
+
+        .hq-final-links a {
+            display: inline-flex;
+            align-items: center;
+            min-height: 44px;
+            color: var(--hq-leaf);
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .hq-final-links a:hover { text-decoration: underline; }
+
+        .hq-legal {
+            margin-top: .5rem;
+            font-size: .85rem;
+        }
+
+        .hq-legal a { color: rgba(255, 255, 255, .8); font-weight: 400; }
+
+        /* ---------- buttons ---------- */
+        .hq-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: .6rem;
+            min-height: 48px;
+            padding: .8rem 1.75rem;
+            border: 0;
+            border-radius: 30px;
+            background: var(--hq-success);
+            color: #000;
+            font: inherit;
+            font-size: 18px;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, .2);
+            transition: transform .2s, background .2s;
+        }
+
+        .hq-root a.hq-btn:hover { background: var(--hq-success-hover); color: #000; transform: scale(1.05); }
+        .hq-btn.hq-ghost { background: transparent; color: var(--hq-forest); border: 2px solid currentColor; box-shadow: none; }
+        .hq-root a.hq-btn.hq-ghost:hover { background: rgba(7, 78, 59, .08); color: var(--hq-forest); }
+        .hq-row { display: flex; flex-wrap: wrap; gap: .75rem; }
+
+        /* ---------- sticky call to action (always visible) ---------- */
+        .hq-sticky {
+            position: fixed;
+            z-index: 900;
+            right: var(--hq-gutter-r);
+            bottom: calc(var(--hq-tabbar) + 16px);
+        }
+
+        .hq-sticky .hq-btn {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, .35);
+            border: 2px solid rgba(0, 0, 0, .85);
+        }
+
+        /* ---------- chrome ---------- */
+        .hq-brand {
+            position: fixed;
+            z-index: 900;
+            top: calc(12px + env(safe-area-inset-top, 0px));
+            left: var(--hq-gutter-l);
+            display: inline-flex;
+            align-items: center;
+            gap: .6rem;
+            background: #fff;
+            color: var(--hq-deep);
+            padding: .3rem 1rem .3rem .4rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 800;
+            letter-spacing: -.01em;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, .18);
+            min-height: 44px;
+        }
+
+        .hq-brand img { width: 34px; height: 34px; display: block; }
+        .hq-brand small { font-weight: 500; color: var(--hq-counter); display: none; }
+
+        .hq-progress {
+            position: fixed;
+            z-index: 950;
+            top: 0;
+            left: 0;
+            height: 4px;
+            width: 100%;
+            transform-origin: left;
+            transform: scaleX(0);
+            background: var(--hq-leaf);
+        }
+
+        .hq-dots {
+            position: fixed;
+            z-index: 900;
+            right: var(--hq-gutter-r);
+            top: calc(50% - var(--hq-tabbar) / 2);
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .hq-dots button {
+            width: 28px;
+            height: 28px;
+            padding: 0;
+            background: none;
+            border: 0;
+            cursor: pointer;
+            display: grid;
+            place-items: center;
+        }
+
+        .hq-dots button::after {
+            content: "";
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            background: transparent;
+            transition: transform .2s, background .2s;
+            box-shadow: 0 0 0 1px rgba(0, 0, 0, .25);
+        }
+
+        .hq-dots button[aria-current="true"]::after { background: #fff; transform: scale(1.4); }
+
+        .hq-msgs p {
+            margin: 0 0 1rem;
+            padding: .75rem 1rem;
+            border-radius: 12px;
+            background: #fff;
+            color: var(--hq-text);
+            font-weight: 600;
+        }
+
+        .hq-msgs .error-message { color: #b00020; }
+        .hq-msgs .success-message { color: #176d3b; }
+
+        @media (min-width: 900px) {
+            .hq-brand small { display: inline; }
+            .hq-brand small::before { content: "\00b7\00a0"; }
+            .hq-inner { padding-right: calc(var(--hq-gutter-r) + 40px); }
+            .hq-sticky { right: calc(var(--hq-gutter-r) + 44px); }
+        }
+
+        @media (max-width: 899px) {
+            .hq-dots { display: none; }
+            .hq-counters { grid-template-columns: repeat(2, 1fr); }
+            .hq-sticky { left: var(--hq-gutter-l); }
+            .hq-sticky .hq-btn { width: 100%; }
+            .hq-panel { padding-block: 80px 96px; }
+        }
+
+        @media (max-height: 640px) {
+            .hq-stage { scroll-snap-type: y proximity; }
+            .hq-panel { padding-block: 72px 88px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .hq-stage { scroll-behavior: auto; }
+            .hq-big { transform: none !important; }
+            .hq-next svg, .hq-navy.is-active .hq-people i { animation: none !important; }
+            .hq-btn, .hq-root a.hq-btn:hover { transition: none; transform: none; }
+        }
     </style>
 
+    <div class="hq-root">
+        <div class="hq-progress" id="hq-progress" aria-hidden="true"></div>
 
-    <hr>
-    {% if messages %}
-        {% for message in messages %}
-            <p class="{{ message.level_tag }}-message">{{ message|safe_html }}</p>
-        {% endfor %}
-        <hr>
-    {% endif %}
-
-
-    {% if not user.is_authenticated %}
-        <div class="btns"><a href="{% url 'register_view' %}">
-            <button class="btn">{% trans "Jetzt registrieren!" %}</button>
-        </a></div>
-        <hr>
-    {% endif %}
-    <h2>{% trans "Übersicht" %}</h2>
-
-    <input type="hidden" id="user_count" value="{{ user_count }}">
-    <input type="hidden" id="klimapunkte" value="{{ klimapunkte|floatformat:0 }}">
-    <input type="hidden" id="tree_count" value="{{ tree_count }}">
-
-    <div id="counters">
-        <div id="user_zaehler_div">
-            <p class="h3_size" id="user_zaehler">{{ user_count }}</p>
-            <p>{% trans "registrierte Nutzer hat diese Plattform bereits." %}</p>
-        </div>
-
-        <div id="klimapunkte_zaehler_div">
-            <p class="h3_size" id="klimapunkte_zaehler">{{ klimapunkte }}</p>
-            <p>{% trans "Klimapunkte wurden von all diesen Nutzern zusammen bereits gesammelt." %}</p>
-        </div>
-
-        <div id="co2_zaehler_div">
-            <p>{% blocktrans %}Weil jeder Klimapunkt ungefähr für <b id="co2_per_klimapunkt">1 kg</b> eingespartes CO₂
-                steht, wurden dadurch insgesamt{% endblocktrans %}</p>
-            <p class="h3_size" id="co2_zaehler"></p>
-            <p>{% trans "Tonnen CO2e eingespart." %}</p>
-        </div>
-
-        <div id="tree_zaehler_div">
-            <p>{% trans "Außerdem wurden insgesamt" %}</p>
-            <p class="h3_size" id="tree_zaehler">{{ tree_count }}</p>
-            <p>{% trans "Bäume gepflanzt." %}</p>
-        </div>
-    </div>
-
-    <hr>
-    <a href="{% url 'hall_of_fame_detail' %}" class="redirect-link">
-        <span>{% trans "Zur Hall of Fame" %}</span>
-        <span class="redirect-link-icon">→</span>
-    </a>
-
-    <div id="mobile-app-div">
-        <hr>
-        <p>{% trans "Keine Lust, ClimateQuest als Webseite zu verwenden?" %} <a href="{% url 'mobile_apps' %}"
-                                                                                class="redirect-link">
-            <span>{% trans "ClimateQuest als App downloaden" %}</span> <span class="redirect-link-icon">→</span> </a>
-        </p>
-    </div>
-    <script nonce="{{ request.csp_script_nonce }}">
-        if (!isStandalone) {
-            document.getElementById("mobile-app-div").style.display = "block";
-        }
-    </script>
-    <hr>
-    <a href="https://blog.plant-for-the-planet.org/2026/motivating-climate-action-through-gamification-ambassador-paul-introduces-his-app-climatequest/"
-       class="redirect-link">
-        <span>{% trans 'Artikel von Plant-for-the-Planet über ClimateQuest' %}</span>
-        <span class="redirect-link-icon">→</span>
-    </a>
-    <hr>
-    <a href="https://de.trustpilot.com/review/climate-quest.de" target="_blank"
-       class="redirect-link dont-show-loading">
-        <span>{% trans "Bewerten Sie uns auf Trustpilot" %}</span>
-        <span class="redirect-link-icon">→</span>
-    </a>
-    <hr>
-
-    <a href="{% url 'companies_and_schools' %}" class="redirect-link dont-show-loading">
-        <span>{% trans "ClimateQuest für Schulen" %}</span>
-        <span class="redirect-link-icon">→</span>
-    </a>
-    <hr>
-
-    <div class="btns">
-        <a href="{% url 'artikel_detail' 5 %}">
-            <button class="btn">{% trans "Wie ClimateQuest funktioniert" %}</button>
+        <a class="hq-brand dont-show-loading" href="{% url 'home' %}">
+            <img src="{% static 'icons/quality/ClimateQuest_logo_no-text.svg' %}" alt="" width="34" height="34">
+            ClimateQuest<small>{% trans "Motivation für mehr Klimaschutz" %}</small>
         </a>
-        {% if user.is_authenticated %}
-            <a href="{% url 'add' %}">
-                <button class="btn">{% trans "Aktion hinzufügen" %}</button>
-            </a>
-            {% if not request.user.families.count > 1 %}
-                <a href="{% url 'create_family' %}">
-                    <button class="btn">{% trans "Family gründen" %}</button>
-                </a>
-                <a href="{% url 'join_family' %}">
-                    <button class="btn">{% trans "Family beitreten" %}</button>
-                </a>
-            {% endif %}
-        {% endif %}
 
+        <nav class="hq-dots" id="hq-dots" aria-label="{% trans 'Kapitel' %}"></nav>
+
+        <div class="hq-sticky">
+            {% if user.is_authenticated %}
+                <a class="hq-btn" href="{% url 'dashboard' %}">{% trans "Zum Dashboard" %} <span
+                        aria-hidden="true">→</span></a>
+            {% else %}
+                <a class="hq-btn" href="{% url 'register_view' %}">{% trans "Registrieren" %}</a>
+            {% endif %}
+        </div>
+
+        <main class="hq-stage" id="hq-stage" tabindex="0" aria-label="{% trans 'ClimateQuest Startseite' %}">
+
+            <!-- 1 · TEMPERATURE -->
+            <section class="hq-panel hq-blue1" data-title="{% trans '1,5 Grad' %}">
+                <div class="hq-inner">
+                    {% if messages %}
+                        <div class="hq-msgs">
+                            {% for message in messages %}
+                                <p class="{{ message.level_tag }}-message">{{ message|safe_html }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    <p class="hq-eyebrow">{% trans "Klimawandel in Zahlen" %} <span class="hq-step">1 / 3</span></p>
+                    <div class="hq-big"><span class="hq-num" data-count="1.5" data-dec="1">{% trans "1,5" %}</span><span
+                            class="hq-unit">°C</span></div>
+                    <h1 class="hq-lede">{% trans "So viel wärmer war die Erde 2024 im Schnitt als vor der Industrialisierung. Zum ersten Mal über ein ganzes Jahr." %}</h1>
+                    <p class="hq-sub">{% trans "Hitzewellen, Dürren und Überschwemmungen sind schon heute spürbar. Jedes weitere Zehntelgrad macht sie schlimmer." %}</p>
+                    <p class="hq-source">{% trans "Quelle: WMO, State of the Global Climate 2024" %}</p>
+                    <button class="hq-next" type="button" data-next>{% trans "Weiter" %} <svg width="18" height="18"
+                                                                                               viewBox="0 0 24 24"
+                                                                                               fill="none"
+                                                                                               stroke="currentColor"
+                                                                                               stroke-width="2.5"
+                                                                                               stroke-linecap="round"
+                                                                                               stroke-linejoin="round"
+                                                                                               aria-hidden="true"><path
+                            d="M6 9l6 6 6-6"/></svg></button>
+                </div>
+            </section>
+
+            <!-- 2 · CO2 -->
+            <section class="hq-panel hq-blue2" data-title="{% trans '37 Milliarden Tonnen' %}">
+                <div class="hq-inner">
+                    <p class="hq-eyebrow">{% trans "Klimawandel in Zahlen" %} <span class="hq-step">2 / 3</span></p>
+                    <div class="hq-big"><span class="hq-num" data-count="37">37</span><span
+                            class="hq-unit">{% trans "Mrd. t CO₂" %}</span></div>
+                    <p class="hq-lede">{% trans "So viel CO₂ setzen wir jedes Jahr durch Kohle, Öl und Gas frei. Über 1.000 Tonnen pro Sekunde." %}</p>
+                    <div class="hq-ticker"><b id="hq-ticker">0 t</b><span>{% trans "CO₂, seit du diese Seite geöffnet hast" %}</span>
+                    </div>
+                    <p class="hq-source">{% trans "Quelle: Global Carbon Budget 2024" %}</p>
+                    <button class="hq-next" type="button" data-next>{% trans "Weiter" %} <svg width="18" height="18"
+                                                                                               viewBox="0 0 24 24"
+                                                                                               fill="none"
+                                                                                               stroke="currentColor"
+                                                                                               stroke-width="2.5"
+                                                                                               stroke-linecap="round"
+                                                                                               stroke-linejoin="round"
+                                                                                               aria-hidden="true"><path
+                            d="M6 9l6 6 6-6"/></svg></button>
+                </div>
+            </section>
+
+            <!-- 3 · PEOPLE -->
+            <section class="hq-panel hq-navy" data-title="{% trans '3,3 Milliarden Menschen' %}">
+                <div class="hq-inner">
+                    <p class="hq-eyebrow">{% trans "Klimawandel in Zahlen" %} <span class="hq-step">3 / 3</span></p>
+                    <div class="hq-big"><span class="hq-num" data-count="3.3" data-dec="1">{% trans "3,3" %}</span><span
+                            class="hq-unit">{% trans "Mrd. Menschen" %}</span></div>
+                    <p class="hq-lede">{% trans "Leben in Regionen, die besonders anfällig für die Folgen des Klimawandels sind." %}</p>
+                    <div class="hq-people" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+                    </div>
+                    <p class="hq-people-note">{% trans "Etwa 4 von 10 Menschen weltweit." %}</p>
+                    <p class="hq-source">{% trans "Quelle: IPCC, Sechster Sachstandsbericht, Arbeitsgruppe II (2022)" %}</p>
+                    <button class="hq-next" type="button" data-next>{% trans "Und jetzt?" %} <svg width="18"
+                                                                                                    height="18"
+                                                                                                    viewBox="0 0 24 24"
+                                                                                                    fill="none"
+                                                                                                    stroke="currentColor"
+                                                                                                    stroke-width="2.5"
+                                                                                                    stroke-linecap="round"
+                                                                                                    stroke-linejoin="round"
+                                                                                                    aria-hidden="true"><path
+                            d="M6 9l6 6 6-6"/></svg></button>
+                </div>
+            </section>
+
+            <!-- 4 · WHY REGISTER -->
+            <section class="hq-panel hq-green" data-title="{% trans 'Warum ClimateQuest' %}">
+                <div class="hq-inner">
+                    <p class="hq-eyebrow">{% trans "Warum ClimateQuest" %}</p>
+                    {% if user.is_authenticated %}
+                        <h2 class="hq-h-xl">{% blocktrans %}Gut, dass du <em>dabei</em> bist.{% endblocktrans %}</h2>
+                        <p class="hq-intro">{% trans "Mach heute weiter, wo du aufgehört hast, und halte deine Streak am Leben." %}</p>
+                    {% else %}
+                        <h2 class="hq-h-xl">{% trans "Du kannst mehr bewirken, als du denkst." %}</h2>
+                        <p class="hq-intro">{% trans "ClimateQuest macht Klimaschutz zum Spiel. Du trägst ein, was du tust, und siehst sofort, was es bringt." %}</p>
+                    {% endif %}
+                    <ul class="hq-benefits">
+                        <li>
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path
+                                    d="M5 19c0-8 5-13 14-14 0 9-5 14-13 14M5 19l7-7"/></svg>
+                            <h3>{% trans "Klimapunkte sammeln" %}</h3>
+                            <p>{% trans "Vom Zug statt Flug bis zur Mahlzeit ohne Fleisch. Ein Punkt steht für etwa 1 kg eingespartes CO₂." %}</p>
+                        </li>
+                        <li>
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path
+                                    d="M12 3c1 3 5 5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-5 1-9z"/></svg>
+                            <h3>{% trans "Dranbleiben macht Spaß" %}</h3>
+                            <p>{% trans "Level, Streaks und Wochenziele halten dich in Bewegung." %}</p>
+                        </li>
+                        <li>
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path
+                                    d="M12 3l5 7h-3l4 6H6l4-6H7z M12 16v5"/></svg>
+                            <h3>{% trans "Bäume pflanzen" %}</h3>
+                            <p>{% trans "Mit deinem Einsatz pflanzt du in der App Bäume." %}</p>
+                        </li>
+                        <li>
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path
+                                    d="M9 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM3 20c0-3 3-5 6-5s6 2 6 5M17 11a2.5 2.5 0 1 0 0-5M18 15c2 .5 3 2 3 5"/></svg>
+                            <h3>{% trans "Gemeinsam mehr schaffen" %}</h3>
+                            <p>{% trans "Vergleiche dich, gründe eine Family, nimm an Events und Petitionen teil." %}</p>
+                        </li>
+                    </ul>
+                    <div class="hq-row">
+                        {% if user.is_authenticated %}
+                            <a class="hq-btn" href="{% url 'add' %}">{% trans "Aktion hinzufügen" %}</a>
+                        {% else %}
+                            <a class="hq-btn" href="{% url 'register_view' %}">{% trans "Jetzt registrieren!" %}</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5 · PROOF -->
+            <section class="hq-panel hq-mint" data-title="{% trans 'Was wir erreicht haben' %}">
+                <div class="hq-inner">
+                    <p class="hq-eyebrow">{% trans "Das hat die Community schon geschafft" %}</p>
+                    <div class="hq-counters">
+                        <div class="hq-counter"><b data-count="{{ user_count|unlocalize }}">{{ user_count }}</b><span>{% trans "registrierte Nutzer" %}</span>
+                        </div>
+                        <div class="hq-counter"><b
+                                data-count="{{ klimapunkte|unlocalize }}">{{ klimapunkte }}</b><span>{% trans "gesammelte Klimapunkte" %}</span>
+                        </div>
+                        <div class="hq-counter"><b data-count="{{ co2|unlocalize }}">{{ co2 }}</b><span>{% trans "Tonnen CO₂e eingespart" %}</span>
+                        </div>
+                        <div class="hq-counter"><b
+                                data-count="{{ tree_count|unlocalize }}">{{ tree_count }}</b><span>{% trans "gepflanzte Bäume" %}</span>
+                        </div>
+                    </div>
+                    <ul class="hq-stories" aria-label="{% trans 'Erfolgsgeschichten' %}">
+                        <li>
+                            <picture>
+                                <source type="image/avif"
+                                        srcset="{% static 'images/ice-train/ice-train-320.avif' %} 320w, {% static 'images/ice-train/ice-train-640.avif' %} 640w"
+                                        sizes="(min-width: 900px) 25vw, 70vw">
+                                <source type="image/webp"
+                                        srcset="{% static 'images/ice-train/ice-train-320.webp' %} 320w, {% static 'images/ice-train/ice-train-640.webp' %} 640w"
+                                        sizes="(min-width: 900px) 25vw, 70vw">
+                                <img src="{% static 'images/ice-train/ice-train-fallback.jpg' %}"
+                                     alt="{% trans 'Bild eines Zugs' %}" loading="lazy">
+                            </picture>
+                            <p>{% trans "User Maradona wurde durch ClimateQuest dazu motiviert, mit dem Zug statt mit dem Flugzeug zu reisen" %}</p>
+                        </li>
+                        <li>
+                            <picture>
+                                <source type="image/avif"
+                                        srcset="{% static 'images/vegan/vegan-320.avif' %} 320w, {% static 'images/vegan/vegan-640.avif' %} 640w"
+                                        sizes="(min-width: 900px) 25vw, 70vw">
+                                <source type="image/webp"
+                                        srcset="{% static 'images/vegan/vegan-320.webp' %} 320w, {% static 'images/vegan/vegan-640.webp' %} 640w"
+                                        sizes="(min-width: 900px) 25vw, 70vw">
+                                <img src="{% static 'images/vegan/vegan-fallback.jpg' %}"
+                                     alt="{% trans 'Bild eines veganes Gerichts' %}" loading="lazy">
+                            </picture>
+                            <p>{% trans "User Jessi wurde durch ClimateQuest dazu motiviert, weniger Käse zu essen" %}</p>
+                        </li>
+                        <li>
+                            <picture>
+                                <source type="image/avif"
+                                        srcset="{% static 'images/mail/mail-320.avif' %} 320w, {% static 'images/mail/mail-640.avif' %} 640w"
+                                        sizes="(min-width: 900px) 25vw, 70vw">
+                                <source type="image/webp"
+                                        srcset="{% static 'images/mail/mail-320.webp' %} 320w, {% static 'images/mail/mail-640.webp' %} 640w"
+                                        sizes="(min-width: 900px) 25vw, 70vw">
+                                <img src="{% static 'images/mail/mail-fallback.jpg' %}"
+                                     alt="{% trans 'Bild eines Mailprogramms' %}" loading="lazy">
+                            </picture>
+                            <p>{% trans "User Jessi wurde durch ClimateQuest dazu motiviert, E-Mails regelmäßig zu löschen" %}</p>
+                        </li>
+                        <li>
+                            <picture>
+                                <source type="image/avif"
+                                        srcset="{% static 'images/plant-tree/plant-tree-320.avif' %} 320w, {% static 'images/plant-tree/plant-tree-640.avif' %} 640w"
+                                        sizes="(min-width: 900px) 25vw, 70vw">
+                                <source type="image/webp"
+                                        srcset="{% static 'images/plant-tree/plant-tree-320.webp' %} 320w, {% static 'images/plant-tree/plant-tree-640.webp' %} 640w"
+                                        sizes="(min-width: 900px) 25vw, 70vw">
+                                <img src="{% static 'images/plant-tree/plant-tree-fallback.jpg' %}"
+                                     alt="{% trans 'Bild, auf dem ein Baum gepflanzt wird' %}" loading="lazy">
+                            </picture>
+                            <p>{% trans "User BrunnerL3 wurde durch ClimateQuest dazu motiviert, einen Baum zu pflanzen" %}</p>
+                        </li>
+                    </ul>
+                    <a class="hq-link" href="{% url 'hall_of_fame_detail' %}"><span>{% trans "Zur Hall of Fame" %}</span><span
+                            aria-hidden="true">→</span></a>
+                </div>
+            </section>
+
+            <!-- 6 · HOW -->
+            <section class="hq-panel hq-light" data-title="{% trans 'So funktioniert es' %}">
+                <div class="hq-inner">
+                    <p class="hq-eyebrow">{% trans "So funktioniert ClimateQuest" %}</p>
+                    <h2 class="hq-h-lg">{% trans "In drei Schritten vom Vorsatz zur Gewohnheit." %}</h2>
+                    <ol class="hq-steps">
+                        <li><h3>{% trans "Aktion eintragen" %}</h3>
+                            <p>{% trans "Wähle aus, was du heute fürs Klima getan hast." %}</p></li>
+                        <li><h3>{% trans "Klimapunkte erhalten" %}</h3>
+                            <p>{% trans "Du siehst sofort, wie viel CO₂ du gespart hast." %}</p></li>
+                        <li><h3>{% trans "Level aufsteigen" %}</h3>
+                            <p>{% trans "Verlängere deine Streak, erreiche Wochenziele und pflanze Bäume." %}</p></li>
+                    </ol>
+                    <div class="hq-row">
+                        {% if not user.is_authenticated %}
+                            <a class="hq-btn" href="{% url 'register_view' %}">{% trans "Jetzt registrieren!" %}</a>
+                        {% endif %}
+                        <a class="hq-btn hq-ghost"
+                           href="{% url 'artikel_detail' 5 %}">{% trans "Wie ClimateQuest funktioniert" %}</a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 7 · FINAL -->
+            <section class="hq-panel hq-final" data-title="{% trans 'Mach mit' %}">
+                <div class="hq-inner">
+                    <p class="hq-eyebrow">{% trans "Dein Start" %}</p>
+                    {% if user.is_authenticated %}
+                        <h2 class="hq-h-xl">{% blocktrans %}Weiter geht's, <em>Klimaheld</em>.{% endblocktrans %}</h2>
+                        <p class="hq-intro">{% trans "Dein Dashboard wartet auf deine nächste Aktion." %}</p>
+                        <div class="hq-row"><a class="hq-btn" href="{% url 'dashboard' %}">{% trans "Zum Dashboard" %}
+                            <span aria-hidden="true">→</span></a></div>
+                    {% else %}
+                        <h2 class="hq-h-xl">{% blocktrans %}Der erste Schritt ist ein <em>Klick</em>.{% endblocktrans %}</h2>
+                        <p class="hq-intro">{% trans "Werde Teil der Community, die Klimaschutz jeden Tag einfacher macht." %}</p>
+                        <div class="hq-row"><a class="hq-btn"
+                                               href="{% url 'register_view' %}">{% trans "Jetzt registrieren!" %}</a>
+                        </div>
+                    {% endif %}
+                    <ul class="hq-final-links">
+                        <li id="hq-app-link" hidden><a href="{% url 'mobile_apps' %}">{% trans "ClimateQuest als App downloaden" %}</a></li>
+                        <li><a href="{% url 'companies_and_schools' %}">{% trans "ClimateQuest für Schulen" %}</a></li>
+                        <li>
+                            <a href="https://blog.plant-for-the-planet.org/2026/motivating-climate-action-through-gamification-ambassador-paul-introduces-his-app-climatequest/">{% trans "Artikel von Plant-for-the-Planet über ClimateQuest" %}</a>
+                        </li>
+                        <li><a href="https://de.trustpilot.com/review/climate-quest.de" target="_blank"
+                               rel="noopener" class="dont-show-loading">{% trans "Bewerten Sie uns auf Trustpilot" %}</a></li>
+                    </ul>
+                    <ul class="hq-final-links hq-legal">
+                        <li><a href="{% url 'nutzungsbedingungen' %}">{% trans "Nutzungsbedingungen" %}</a></li>
+                        <li><a href="{% url 'impressum' %}">{% trans "Impressum" %}</a></li>
+                        <li><a href="{% url 'datenschutz' %}">{% trans "Datenschutz" %}</a></li>
+                    </ul>
+                </div>
+            </section>
+        </main>
     </div>
 
     <script nonce="{{ request.csp_script_nonce }}">
-        document.addEventListener("DOMContentLoaded", function () {
-            const user_zaehler = document.getElementById('user_zaehler');
-            const klimapunkte_zaehler = document.getElementById('klimapunkte_zaehler');
-            const co2_zaehler = document.getElementById('co2_zaehler');
-            const tree_zaehler = document.getElementById('tree_zaehler');
+        (function () {
+            const stage = document.getElementById('hq-stage');
+            const panels = Array.from(stage.querySelectorAll('.hq-panel'));
+            const dotsNav = document.getElementById('hq-dots');
+            const progress = document.getElementById('hq-progress');
+            const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const locale = document.documentElement.lang || 'de';
+            const COUNT_MS = 1000; // count-up never takes longer than 1 second
+            const fmt = (n, d) => n.toLocaleString(locale, {minimumFractionDigits: d, maximumFractionDigits: d});
+            const smooth = reduced ? 'auto' : 'smooth';
 
-            //let user_count = document.getElementById('user_count').value;
-            //let klimapunkte = document.getElementById('klimapunkte').value;
-            //let tree_count = document.getElementById('tree_count').value;
+            // Chapter dots
+            const dots = panels.map((p, i) => {
+                const b = document.createElement('button');
+                b.type = 'button';
+                b.setAttribute('aria-label', (i + 1) + ': ' + p.dataset.title);
+                b.addEventListener('click', () => p.scrollIntoView({behavior: smooth}));
+                dotsNav.appendChild(b);
+                return b;
+            });
 
+            // Count-up. The final value is already in the HTML; the animation is an enhancement.
+            function countUp(el) {
+                if (el.dataset.done) return;
+                el.dataset.done = '1';
+                if (reduced) return;
+                const to = parseFloat(el.dataset.count);
+                const d = parseInt(el.dataset.dec || '0', 10);
+                if (!isFinite(to)) return;
+                const t0 = performance.now();
 
-            animateCount(user_zaehler, {{ user_count }});
-            animateCount(klimapunkte_zaehler, {{ klimapunkte }});
-            animateCount(co2_zaehler, {{ co2 }});
-            animateCount(tree_zaehler, {{ tree_count }});
-        });
+                function frame(now) {
+                    const p = Math.min((now - t0) / COUNT_MS, 1);
+                    el.textContent = fmt(to * (1 - Math.pow(1 - p, 3)), d);
+                    if (p < 1) requestAnimationFrame(frame); else el.textContent = fmt(to, d);
+                }
 
-        function animateCount(element, endValue, maxDuration = 1500) {
-            // Counts up over at most `maxDuration` ms; only the last `steps` numbers are animated (as before).
-            const stepTime = 10;
-            const steps = Math.floor(maxDuration / stepTime);
-            const startValue = endValue > steps ? endValue - steps : 0;
-            const duration = steps * stepTime;
-            const startedAt = performance.now();
-
-            // requestAnimationFrame instead of a 10 ms interval: at most one update per frame and
-            // no work at all while the tab is in the background.
-            function frame(now) {
-                const progress = Math.min((now - startedAt) / duration, 1);
-                element.textContent = Math.floor(startValue + (endValue - startValue) * progress);
-                if (progress < 1) requestAnimationFrame(frame);
+                requestAnimationFrame(frame);
             }
 
-            requestAnimationFrame(frame);
-        }
+            function countPanel(panel) {
+                panel.querySelectorAll('[data-count]').forEach(countUp);
+            }
+
+            // Start counting as soon as a chapter is entered (about 15% visible).
+            const seen = new IntersectionObserver(entries => {
+                entries.forEach(e => {
+                    if (e.isIntersecting) countPanel(e.target);
+                });
+            }, {root: stage, threshold: 0.15});
+            const active = new IntersectionObserver(entries => {
+                entries.forEach(e => {
+                    if (!e.isIntersecting) return;
+                    panels.forEach((p, i) => {
+                        const on = p === e.target;
+                        p.classList.toggle('is-active', on);
+                        if (on) dots.forEach((d, j) => d.setAttribute('aria-current', j === i ? 'true' : 'false'));
+                    });
+                    countPanel(e.target);
+                });
+            }, {root: stage, threshold: 0.6});
+            panels.forEach(p => {
+                seen.observe(p);
+                active.observe(p);
+            });
+
+            // Scroll effects: progress bar and parallax variable per chapter
+            let ticking = false;
+
+            function onScroll() {
+                if (ticking) return;
+                ticking = true;
+                requestAnimationFrame(() => {
+                    const max = stage.scrollHeight - stage.clientHeight;
+                    progress.style.transform = 'scaleX(' + (max > 0 ? stage.scrollTop / max : 0) + ')';
+                    if (!reduced) panels.forEach(p => {
+                        const v = (p.offsetTop - stage.scrollTop) / stage.clientHeight;
+                        if (Math.abs(v) < 1.2) p.style.setProperty('--p', Math.max(-1, Math.min(1, v)).toFixed(3));
+                    });
+                    ticking = false;
+                });
+            }
+
+            stage.addEventListener('scroll', onScroll, {passive: true});
+            onScroll();
+
+            stage.querySelectorAll('[data-next]').forEach(b => {
+                b.addEventListener('click', () => b.closest('.hq-panel').nextElementSibling.scrollIntoView({behavior: smooth}));
+            });
+
+            // Live CO2 ticker: about 37 Gt per year = roughly 1,185 t per second
+            const ticker = document.getElementById('hq-ticker');
+            const startedAt = performance.now();
+            setInterval(() => {
+                ticker.textContent = fmt(Math.floor((performance.now() - startedAt) / 1000 * 1185), 0) + ' t';
+            }, 100);
+
+            if (typeof isStandalone !== 'undefined' && !isStandalone) {
+                document.getElementById('hq-app-link').hidden = false;
+            }
+
+            try {
+                stage.focus({preventScroll: true});
+            } catch (e) {
+            }
+        })();
     </script>
 {% endblock %}
