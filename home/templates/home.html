@@ -1,7 +1,5 @@
 {% extends "base.html" %}
 {% load static %}
-{% load development %}
-{% load production %}
 {% load i18n %}
 {% load l10n %}
 {% block meta %}
@@ -100,13 +98,35 @@
             position: relative;
         }
 
-        .hq-blue1 { background: var(--hq-blue); }
-        .hq-blue2 { background: var(--hq-blue-2); }
-        .hq-navy { background: var(--hq-navy); }
-        .hq-green { background: var(--hq-deep); }
-        .hq-mint { background: var(--hq-mint); color: var(--hq-text); }
-        .hq-light { background: var(--hq-bg); color: var(--hq-text); }
-        .hq-final { background: var(--hq-forest); }
+        .hq-blue1 {
+            background: var(--hq-blue);
+        }
+
+        .hq-blue2 {
+            background: var(--hq-blue-2);
+        }
+
+        .hq-navy {
+            background: var(--hq-navy);
+        }
+
+        .hq-green {
+            background: var(--hq-deep);
+        }
+
+        .hq-mint {
+            background: var(--hq-mint);
+            color: var(--hq-text);
+        }
+
+        .hq-light {
+            background: var(--hq-bg);
+            color: var(--hq-text);
+        }
+
+        .hq-final {
+            background: var(--hq-forest);
+        }
 
         .hq-eyebrow {
             font-size: .85rem;
@@ -119,6 +139,11 @@
             gap: .75rem;
             align-items: center;
             flex-wrap: wrap;
+            text-decoration: none;
+        }
+
+        .cursor-pointer {
+            cursor: pointer;
         }
 
         .hq-eyebrow .hq-step {
@@ -128,8 +153,13 @@
             letter-spacing: .06em;
         }
 
-        .hq-mint .hq-eyebrow, .hq-light .hq-eyebrow { color: var(--hq-counter); }
-        .hq-green .hq-eyebrow, .hq-final .hq-eyebrow { color: var(--hq-leaf); }
+        .hq-mint .hq-eyebrow, .hq-light .hq-eyebrow {
+            color: var(--hq-counter);
+        }
+
+        .hq-green .hq-eyebrow, .hq-final .hq-eyebrow {
+            color: var(--hq-leaf);
+        }
 
         /* ---------- stat chapters ---------- */
         .hq-big {
@@ -148,7 +178,9 @@
             will-change: transform;
         }
 
-        .hq-num { font-size: clamp(5.5rem, min(22vw, 30vh), 16rem); }
+        .hq-num {
+            font-size: clamp(5.5rem, min(22vw, 30vh), 16rem);
+        }
 
         .hq-unit {
             font-size: clamp(1.6rem, min(5vw, 8vh), 4.5rem);
@@ -194,10 +226,19 @@
             min-height: 44px;
         }
 
-        .hq-next:hover { background: rgba(255, 255, 255, .14); }
-        .hq-next svg { animation: hq-bob 1.6s ease-in-out infinite; }
+        .hq-next:hover {
+            background: rgba(255, 255, 255, .14);
+        }
 
-        @keyframes hq-bob { 50% { transform: translateY(4px); } }
+        .hq-next svg {
+            animation: hq-bob 1.6s ease-in-out infinite;
+        }
+
+        @keyframes hq-bob {
+            50% {
+                transform: translateY(4px);
+            }
+        }
 
         .hq-ticker {
             display: inline-flex;
@@ -215,7 +256,10 @@
             line-height: 1.1;
         }
 
-        .hq-ticker span { font-size: .95rem; color: var(--hq-on-blue); }
+        .hq-ticker span {
+            font-size: .95rem;
+            color: var(--hq-on-blue);
+        }
 
         .hq-people {
             display: grid;
@@ -231,16 +275,44 @@
             border: 2px solid rgba(255, 255, 255, .55);
         }
 
-        .hq-people i:nth-child(-n+4) { background: var(--hq-leaf); border-color: var(--hq-leaf); }
-        .hq-navy.is-active .hq-people i:nth-child(-n+4) { animation: hq-pop .5s cubic-bezier(.3, 1.6, .5, 1) both; }
-        .hq-navy.is-active .hq-people i:nth-child(1) { animation-delay: .5s; }
-        .hq-navy.is-active .hq-people i:nth-child(2) { animation-delay: .65s; }
-        .hq-navy.is-active .hq-people i:nth-child(3) { animation-delay: .8s; }
-        .hq-navy.is-active .hq-people i:nth-child(4) { animation-delay: .95s; }
+        .hq-people i:nth-child(-n+4) {
+            background: var(--hq-leaf);
+            border-color: var(--hq-leaf);
+        }
 
-        @keyframes hq-pop { from { transform: scale(.3); opacity: .2; background: transparent; } }
+        .hq-navy.is-active .hq-people i:nth-child(-n+4) {
+            animation: hq-pop .5s cubic-bezier(.3, 1.6, .5, 1) both;
+        }
 
-        .hq-people-note { font-size: .95rem; color: var(--hq-on-blue); margin: 0 0 1rem; }
+        .hq-navy.is-active .hq-people i:nth-child(1) {
+            animation-delay: .5s;
+        }
+
+        .hq-navy.is-active .hq-people i:nth-child(2) {
+            animation-delay: .65s;
+        }
+
+        .hq-navy.is-active .hq-people i:nth-child(3) {
+            animation-delay: .8s;
+        }
+
+        .hq-navy.is-active .hq-people i:nth-child(4) {
+            animation-delay: .95s;
+        }
+
+        @keyframes hq-pop {
+            from {
+                transform: scale(.3);
+                opacity: .2;
+                background: transparent;
+            }
+        }
+
+        .hq-people-note {
+            font-size: .95rem;
+            color: var(--hq-on-blue);
+            margin: 0 0 1rem;
+        }
 
         /* ---------- why register ---------- */
         .hq-h-xl {
@@ -253,7 +325,10 @@
             text-wrap: balance;
         }
 
-        .hq-h-xl em { font-style: normal; color: var(--hq-leaf); }
+        .hq-h-xl em {
+            font-style: normal;
+            color: var(--hq-leaf);
+        }
 
         .hq-h-lg {
             font-size: clamp(1.8rem, 4.5vw, 3.2rem);
@@ -290,9 +365,21 @@
             min-width: 0;
         }
 
-        .hq-benefits svg { color: var(--hq-leaf); margin-bottom: .5rem; }
-        .hq-benefits h3 { margin: 0 0 .25rem; font-size: 1.1rem; }
-        .hq-benefits p { margin: 0; font-size: .95rem; color: rgba(255, 255, 255, .84); }
+        .hq-benefits svg {
+            color: var(--hq-leaf);
+            margin-bottom: .5rem;
+        }
+
+        .hq-benefits h3 {
+            margin: 0 0 .25rem;
+            font-size: 1.1rem;
+        }
+
+        .hq-benefits p {
+            margin: 0;
+            font-size: .95rem;
+            color: rgba(255, 255, 255, .84);
+        }
 
         /* ---------- proof ---------- */
         .hq-counters {
@@ -320,7 +407,9 @@
             font-variant-numeric: tabular-nums;
         }
 
-        .hq-counter span { font-size: .92rem; }
+        .hq-counter span {
+            font-size: .92rem;
+        }
 
         .hq-stories {
             list-style: none;
@@ -354,7 +443,11 @@
             display: block;
         }
 
-        .hq-stories p { margin: 0; padding: .8rem 1rem 1rem; font-size: .92rem; }
+        .hq-stories p {
+            margin: 0;
+            padding: .8rem 1rem 1rem;
+            font-size: .92rem;
+        }
 
         .hq-link {
             display: inline-flex;
@@ -367,8 +460,13 @@
             color: var(--hq-forest);
         }
 
-        .hq-link span:last-child { transition: transform .2s; }
-        .hq-link:hover span:last-child { transform: translateX(4px); }
+        .hq-link span:last-child {
+            transition: transform .2s;
+        }
+
+        .hq-link:hover span:last-child {
+            transform: translateX(4px);
+        }
 
         /* ---------- how ---------- */
         .hq-steps {
@@ -403,8 +501,15 @@
             margin-bottom: .8rem;
         }
 
-        .hq-steps h3 { margin: 0 0 .3rem; font-size: 1.2rem; color: var(--hq-forest); }
-        .hq-steps p { margin: 0; }
+        .hq-steps h3 {
+            margin: 0 0 .3rem;
+            font-size: 1.2rem;
+            color: var(--hq-forest);
+        }
+
+        .hq-steps p {
+            margin: 0;
+        }
 
         /* ---------- final ---------- */
         .hq-final-links {
@@ -425,14 +530,19 @@
             text-decoration: none;
         }
 
-        .hq-final-links a:hover { text-decoration: underline; }
+        .hq-final-links a:hover {
+            text-decoration: underline;
+        }
 
         .hq-legal {
             margin-top: .5rem;
             font-size: .85rem;
         }
 
-        .hq-legal a { color: rgba(255, 255, 255, .8); font-weight: 400; }
+        .hq-legal a {
+            color: rgba(255, 255, 255, .8);
+            font-weight: 400;
+        }
 
         /* ---------- buttons ---------- */
         .hq-btn {
@@ -455,10 +565,29 @@
             transition: transform .2s, background .2s;
         }
 
-        .hq-root a.hq-btn:hover { background: var(--hq-success-hover); color: #000; transform: scale(1.05); }
-        .hq-btn.hq-ghost { background: transparent; color: var(--hq-forest); border: 2px solid currentColor; box-shadow: none; }
-        .hq-root a.hq-btn.hq-ghost:hover { background: rgba(7, 78, 59, .08); color: var(--hq-forest); }
-        .hq-row { display: flex; flex-wrap: wrap; gap: .75rem; }
+        .hq-root a.hq-btn:hover {
+            background: var(--hq-success-hover);
+            color: #000;
+            transform: scale(1.05);
+        }
+
+        .hq-btn.hq-ghost {
+            background: transparent;
+            color: var(--hq-forest);
+            border: 2px solid currentColor;
+            box-shadow: none;
+        }
+
+        .hq-root a.hq-btn.hq-ghost:hover {
+            background: rgba(7, 78, 59, .08);
+            color: var(--hq-forest);
+        }
+
+        .hq-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: .75rem;
+        }
 
         /* ---------- sticky call to action (always visible) ---------- */
         .hq-sticky {
@@ -493,8 +622,17 @@
             min-height: 44px;
         }
 
-        .hq-brand img { width: 34px; height: 34px; display: block; }
-        .hq-brand small { font-weight: 500; color: var(--hq-counter); display: none; }
+        .hq-brand img {
+            width: 34px;
+            height: 34px;
+            display: block;
+        }
+
+        .hq-brand small {
+            font-weight: 500;
+            color: var(--hq-counter);
+            display: none;
+        }
 
         .hq-progress {
             position: fixed;
@@ -541,7 +679,10 @@
             box-shadow: 0 0 0 1px rgba(0, 0, 0, .25);
         }
 
-        .hq-dots button[aria-current="true"]::after { background: #fff; transform: scale(1.4); }
+        .hq-dots button[aria-current="true"]::after {
+            background: #fff;
+            transform: scale(1.4);
+        }
 
         .hq-msgs p {
             margin: 0 0 1rem;
@@ -552,39 +693,99 @@
             font-weight: 600;
         }
 
-        .hq-msgs .error-message { color: #b00020; }
-        .hq-msgs .success-message { color: #176d3b; }
+        .hq-msgs .error-message {
+            color: #b00020;
+        }
+
+        .hq-msgs .success-message {
+            color: #176d3b;
+        }
 
         @media (min-width: 900px) {
             /* Desktop: no bottom tab bar on the start page, so no white strip */
-            .hq-root { --hq-tabbar: 0px; }
-            body:has(.hq-stage) .tabbar { display: none; }
-            body:has(.hq-stage) { padding-left: 0; padding-right: 0; }
-            .hq-stage, .hq-panel { width: 100%; }
-            .hq-brand small { display: inline; }
-            .hq-brand small::before { content: "\00b7\00a0"; }
-            .hq-inner { padding-right: calc(var(--hq-gutter-r) + 40px); }
-            .hq-sticky { right: calc(var(--hq-gutter-r) + 44px); }
+            .hq-root {
+                --hq-tabbar: 0px;
+            }
+
+            body:has(.hq-stage) .tabbar {
+                display: none;
+            }
+
+            body:has(.hq-stage) {
+                padding-left: 0;
+                padding-right: 0;
+            }
+
+            .hq-stage, .hq-panel {
+                width: 100%;
+            }
+
+            .hq-brand small {
+                display: inline;
+            }
+
+            .hq-brand small::before {
+                content: "\00b7\00a0";
+            }
+
+            .hq-inner {
+                padding-right: calc(var(--hq-gutter-r) + 40px);
+            }
+
+            .hq-sticky {
+                right: calc(var(--hq-gutter-r) + 44px);
+            }
         }
 
         @media (max-width: 899px) {
-            .hq-dots { display: none; }
-            .hq-counters { grid-template-columns: repeat(2, 1fr); }
-            .hq-sticky { left: var(--hq-gutter-l); }
-            .hq-sticky .hq-btn { width: 100%; }
-            .hq-panel { padding-block: 80px 96px; }
+            .hq-dots {
+                display: none;
+            }
+
+            .hq-counters {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .hq-sticky {
+                left: var(--hq-gutter-l);
+            }
+
+            .hq-sticky .hq-btn {
+                width: 100%;
+            }
+
+            .hq-panel {
+                padding-block: 80px 96px;
+            }
         }
 
         @media (max-height: 640px) {
-            .hq-stage { scroll-snap-type: y proximity; }
-            .hq-panel { padding-block: 72px 88px; }
+            .hq-stage {
+                scroll-snap-type: y proximity;
+            }
+
+            .hq-panel {
+                padding-block: 72px 88px;
+            }
         }
 
         @media (prefers-reduced-motion: reduce) {
-            .hq-stage { scroll-behavior: auto; }
-            .hq-big { transform: none !important; }
-            .hq-next svg, .hq-navy.is-active .hq-people i { animation: none !important; }
-            .hq-btn, .hq-root a.hq-btn:hover { transition: none; transform: none; }
+            .hq-stage {
+                scroll-behavior: auto;
+            }
+
+            .hq-big {
+                transform: none !important;
+            }
+
+            .hq-next svg, .hq-navy.is-active .hq-people i {
+                animation: none !important;
+            }
+
+            .hq-btn, .hq-root a.hq-btn:hover {
+                transition: none;
+                transform: none;
+            }
         }
     </style>
 
@@ -619,67 +820,84 @@
                             {% endfor %}
                         </div>
                     {% endif %}
-                    <p class="hq-eyebrow">{% trans "Klimawandel in Zahlen" %} <span class="hq-step">1 / 3</span></p>
+                    <a class="hq-eyebrow" href="{% url 'facts' %}">{% trans "Klimawandel in Zahlen" %} <span
+                            class="hq-step">1 / 3</span></a>
                     <div class="hq-big"><span class="hq-num" data-count="1.5" data-dec="1">{% trans "1,5" %}</span><span
                             class="hq-unit">°C</span></div>
                     <h1 class="hq-lede">{% trans "So viel wärmer war die Erde 2024 im Schnitt als vor der Industrialisierung. Zum ersten Mal über ein ganzes Jahr." %}</h1>
                     <p class="hq-sub">{% trans "Hitzewellen, Dürren und Überschwemmungen sind schon heute spürbar. Jedes weitere Zehntelgrad macht sie schlimmer." %}</p>
                     <p class="hq-source">{% trans "Quelle: WMO, State of the Global Climate 2024" %}</p>
-                    <button class="hq-next" type="button" data-next>{% trans "Weiter" %} <svg width="18" height="18"
-                                                                                               viewBox="0 0 24 24"
-                                                                                               fill="none"
-                                                                                               stroke="currentColor"
-                                                                                               stroke-width="2.5"
-                                                                                               stroke-linecap="round"
-                                                                                               stroke-linejoin="round"
-                                                                                               aria-hidden="true"><path
-                            d="M6 9l6 6 6-6"/></svg></button>
+                    <button class="hq-next" type="button" data-next>{% trans "Weiter" %}
+                        <svg width="18" height="18"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="2.5"
+                             stroke-linecap="round"
+                             stroke-linejoin="round"
+                             aria-hidden="true">
+                            <path
+                                    d="M6 9l6 6 6-6"/>
+                        </svg>
+                    </button>
                 </div>
             </section>
 
             <!-- 2 · CO2 -->
             <section class="hq-panel hq-blue2" data-title="{% trans '37 Milliarden Tonnen' %}">
                 <div class="hq-inner">
-                    <p class="hq-eyebrow">{% trans "Klimawandel in Zahlen" %} <span class="hq-step">2 / 3</span></p>
+                    <a class="hq-eyebrow" href="{% url 'facts' %}">{% trans "Klimawandel in Zahlen" %} <span
+                            class="hq-step">2 / 3</span></a>
                     <div class="hq-big"><span class="hq-num" data-count="37">37</span><span
                             class="hq-unit">{% trans "Mrd. t CO₂" %}</span></div>
                     <p class="hq-lede">{% trans "So viel CO₂ setzen wir jedes Jahr durch Kohle, Öl und Gas frei. Über 1.000 Tonnen pro Sekunde." %}</p>
-                    <div class="hq-ticker"><b id="hq-ticker">0 t</b><span>{% trans "CO₂, seit du diese Seite geöffnet hast" %}</span>
+                    <div class="hq-ticker"><b id="hq-ticker">0
+                        t</b><span>{% trans "CO₂, seit du diese Seite geöffnet hast" %}</span>
                     </div>
                     <p class="hq-source">{% trans "Quelle: Global Carbon Budget 2024" %}</p>
-                    <button class="hq-next" type="button" data-next>{% trans "Weiter" %} <svg width="18" height="18"
-                                                                                               viewBox="0 0 24 24"
-                                                                                               fill="none"
-                                                                                               stroke="currentColor"
-                                                                                               stroke-width="2.5"
-                                                                                               stroke-linecap="round"
-                                                                                               stroke-linejoin="round"
-                                                                                               aria-hidden="true"><path
-                            d="M6 9l6 6 6-6"/></svg></button>
+                    <button class="hq-next" type="button" data-next>{% trans "Weiter" %}
+                        <svg width="18" height="18"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="2.5"
+                             stroke-linecap="round"
+                             stroke-linejoin="round"
+                             aria-hidden="true">
+                            <path
+                                    d="M6 9l6 6 6-6"/>
+                        </svg>
+                    </button>
                 </div>
             </section>
 
             <!-- 3 · PEOPLE -->
             <section class="hq-panel hq-navy" data-title="{% trans '3,3 Milliarden Menschen' %}">
                 <div class="hq-inner">
-                    <p class="hq-eyebrow">{% trans "Klimawandel in Zahlen" %} <span class="hq-step">3 / 3</span></p>
+                    <a class="hq-eyebrow" href="{% url 'facts' %}">{% trans "Klimawandel in Zahlen" %} <span
+                            class="hq-step">3 / 3</span></a>
                     <div class="hq-big"><span class="hq-num" data-count="3.3" data-dec="1">{% trans "3,3" %}</span><span
                             class="hq-unit">{% trans "Mrd. Menschen" %}</span></div>
                     <p class="hq-lede">{% trans "Leben in Regionen, die besonders anfällig für die Folgen des Klimawandels sind." %}</p>
-                    <div class="hq-people" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+                    <div class="hq-people" aria-hidden="true">
+                        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
                     </div>
                     <p class="hq-people-note">{% trans "Etwa 4 von 10 Menschen weltweit." %}</p>
                     <p class="hq-source">{% trans "Quelle: IPCC, Sechster Sachstandsbericht, Arbeitsgruppe II (2022)" %}</p>
-                    <button class="hq-next" type="button" data-next>{% trans "Und jetzt?" %} <svg width="18"
-                                                                                                    height="18"
-                                                                                                    viewBox="0 0 24 24"
-                                                                                                    fill="none"
-                                                                                                    stroke="currentColor"
-                                                                                                    stroke-width="2.5"
-                                                                                                    stroke-linecap="round"
-                                                                                                    stroke-linejoin="round"
-                                                                                                    aria-hidden="true"><path
-                            d="M6 9l6 6 6-6"/></svg></button>
+                    <button class="hq-next" type="button" data-next>{% trans "Und jetzt?" %}
+                        <svg width="18"
+                             height="18"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="2.5"
+                             stroke-linecap="round"
+                             stroke-linejoin="round"
+                             aria-hidden="true">
+                            <path
+                                    d="M6 9l6 6 6-6"/>
+                        </svg>
+                    </button>
                 </div>
             </section>
 
@@ -697,29 +915,37 @@
                     <ul class="hq-benefits">
                         <li>
                             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path
-                                    d="M5 19c0-8 5-13 14-14 0 9-5 14-13 14M5 19l7-7"/></svg>
+                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path
+                                        d="M5 19c0-8 5-13 14-14 0 9-5 14-13 14M5 19l7-7"/>
+                            </svg>
                             <h3>{% trans "Klimapunkte sammeln" %}</h3>
                             <p>{% trans "Vom Zug statt Flug bis zur Mahlzeit ohne Fleisch. Ein Punkt steht für etwa 1 kg eingespartes CO₂." %}</p>
                         </li>
                         <li>
                             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path
-                                    d="M12 3c1 3 5 5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-5 1-9z"/></svg>
+                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path
+                                        d="M12 3c1 3 5 5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-5 1-9z"/>
+                            </svg>
                             <h3>{% trans "Dranbleiben macht Spaß" %}</h3>
                             <p>{% trans "Level, Streaks und Wochenziele halten dich in Bewegung." %}</p>
                         </li>
                         <li>
                             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path
-                                    d="M12 3l5 7h-3l4 6H6l4-6H7z M12 16v5"/></svg>
+                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path
+                                        d="M12 3l5 7h-3l4 6H6l4-6H7z M12 16v5"/>
+                            </svg>
                             <h3>{% trans "Bäume pflanzen" %}</h3>
                             <p>{% trans "Mit deinem Einsatz pflanzt du in der App Bäume." %}</p>
                         </li>
                         <li>
                             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path
-                                    d="M9 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM3 20c0-3 3-5 6-5s6 2 6 5M17 11a2.5 2.5 0 1 0 0-5M18 15c2 .5 3 2 3 5"/></svg>
+                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path
+                                        d="M9 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM3 20c0-3 3-5 6-5s6 2 6 5M17 11a2.5 2.5 0 1 0 0-5M18 15c2 .5 3 2 3 5"/>
+                            </svg>
                             <h3>{% trans "Gemeinsam mehr schaffen" %}</h3>
                             <p>{% trans "Vergleiche dich, gründe eine Family, nimm an Events und Petitionen teil." %}</p>
                         </li>
@@ -739,12 +965,14 @@
                 <div class="hq-inner">
                     <p class="hq-eyebrow">{% trans "Das hat die Community schon geschafft" %}</p>
                     <div class="hq-counters">
-                        <div class="hq-counter"><b data-count="{{ user_count|unlocalize }}">{{ user_count }}</b><span>{% trans "registrierte Nutzer" %}</span>
+                        <div class="hq-counter"><b
+                                data-count="{{ user_count|unlocalize }}">{{ user_count }}</b><span>{% trans "registrierte Nutzer" %}</span>
                         </div>
                         <div class="hq-counter"><b
                                 data-count="{{ klimapunkte|unlocalize }}">{{ klimapunkte }}</b><span>{% trans "gesammelte Klimapunkte" %}</span>
                         </div>
-                        <div class="hq-counter"><b data-count="{{ co2|unlocalize }}">{{ co2 }}</b><span>{% trans "Tonnen CO₂e eingespart" %}</span>
+                        <div class="hq-counter"><b
+                                data-count="{{ co2|unlocalize }}">{{ co2 }}</b><span>{% trans "Tonnen CO₂e eingespart" %}</span>
                         </div>
                         <div class="hq-counter"><b
                                 data-count="{{ tree_count|unlocalize }}">{{ tree_count }}</b><span>{% trans "gepflanzte Bäume" %}</span>
@@ -804,7 +1032,8 @@
                             <p>{% trans "User BrunnerL3 wurde durch ClimateQuest dazu motiviert, einen Baum zu pflanzen" %}</p>
                         </li>
                     </ul>
-                    <a class="hq-link" href="{% url 'hall_of_fame_detail' %}"><span>{% trans "Zur Hall of Fame" %}</span><span
+                    <a class="hq-link"
+                       href="{% url 'hall_of_fame_detail' %}"><span>{% trans "Zur Hall of Fame" %}</span><span
                             aria-hidden="true">→</span></a>
                 </div>
             </section>
@@ -820,7 +1049,8 @@
                         <li><h3>{% trans "Klimapunkte erhalten" %}</h3>
                             <p>{% trans "Du siehst sofort, wie viel CO₂ du gespart hast." %}</p></li>
                         <li><h3>{% trans "Level aufsteigen" %}</h3>
-                            <p>{% trans "Steig im Level auf, erreiche Wochenziele, verlänger deine Streak, vergleich dich mit Freunden und pflanze Bäume." %}</p></li>
+                            <p>{% trans "Steig im Level auf, erreiche Wochenziele, verlänger deine Streak, vergleich dich mit Freunden und pflanze Bäume." %}</p>
+                        </li>
                     </ol>
                     <div class="hq-row">
                         {% if not user.is_authenticated %}
@@ -842,20 +1072,23 @@
                         <div class="hq-row"><a class="hq-btn" href="{% url 'dashboard' %}">{% trans "Zum Dashboard" %}
                             <span aria-hidden="true">→</span></a></div>
                     {% else %}
-                        <h2 class="hq-h-xl">{% blocktrans %}Der erste Schritt ist ein <em>Klick</em>.{% endblocktrans %}</h2>
+                        <h2 class="hq-h-xl">{% blocktrans %}Der erste Schritt ist ein <em>Klick</em>.{% endblocktrans %}
+                        </h2>
                         <p class="hq-intro">{% trans "Werde Teil der Community, die Klimaschutz jeden Tag einfacher macht." %}</p>
                         <div class="hq-row"><a class="hq-btn"
                                                href="{% url 'register_view' %}">{% trans "Jetzt registrieren!" %}</a>
                         </div>
                     {% endif %}
                     <ul class="hq-final-links">
-                        <li id="hq-app-link" hidden><a href="{% url 'mobile_apps' %}">{% trans "ClimateQuest als App downloaden" %}</a></li>
+                        <li id="hq-app-link" hidden><a
+                                href="{% url 'mobile_apps' %}">{% trans "ClimateQuest als App downloaden" %}</a></li>
                         <li><a href="{% url 'companies_and_schools' %}">{% trans "ClimateQuest für Schulen" %}</a></li>
                         <li>
                             <a href="https://blog.plant-for-the-planet.org/2026/motivating-climate-action-through-gamification-ambassador-paul-introduces-his-app-climatequest/">{% trans "Artikel von Plant-for-the-Planet über ClimateQuest" %}</a>
                         </li>
                         <li><a href="https://de.trustpilot.com/review/climate-quest.de" target="_blank"
-                               rel="noopener" class="dont-show-loading">{% trans "Bewerten Sie uns auf Trustpilot" %}</a></li>
+                               rel="noopener"
+                               class="dont-show-loading">{% trans "Bewerten Sie uns auf Trustpilot" %}</a></li>
                     </ul>
                     <ul class="hq-final-links hq-legal">
                         <li><a href="{% url 'nutzungsbedingungen' %}">{% trans "Nutzungsbedingungen" %}</a></li>

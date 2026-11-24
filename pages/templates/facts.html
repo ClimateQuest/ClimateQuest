@@ -1,0 +1,1202 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+{% load l10n %}
+{% block meta %}
+    <meta name="description"
+          content="{% blocktrans %}Hier findest du harte Zahlen und Fakten zur Klimakrise{% endblocktrans %}">
+{% endblock %}
+{% block title %}{% trans "Fakten" %}{% endblock %}
+
+{% block content %}
+    <style nonce="{{ request.csp_style_nonce }}">
+        html:has(.hq-stage) {
+            overflow: hidden;
+        }
+
+        .hq-root {
+            --hq-blue: var(--color-primary, #0433ff);
+            --hq-blue-2: #0326cf;
+            --hq-navy: #07125e;
+            --hq-forest: #074e3b;
+            --hq-deep: #03392d;
+            --hq-leaf: #b3e199;
+            --hq-mint: var(--color-bg-dark, #e0f7e9);
+            --hq-bg: var(--color-bg, #f4f6f8);
+            --hq-text: var(--color-text, #333);
+            --hq-counter: var(--color-counters, #3a6b4f);
+            --hq-success: var(--color-success, #2ecc71);
+            --hq-success-hover: #27ae60;
+            --hq-on-blue: rgba(255, 255, 255, .86);
+            --hq-tabbar: calc(60px + max(0px, var(--safe-area-inset-bottom, 0px)));
+            --hq-gutter-l: max(16px, env(safe-area-inset-left, 0px));
+            --hq-gutter-r: max(16px, env(safe-area-inset-right, 0px));
+            color: #fff;
+            line-height: 1.45;
+        }
+
+        .hq-root *, .hq-root *::before, .hq-root *::after {
+            box-sizing: border-box;
+        }
+
+        .hq-root :focus-visible {
+            outline: 3px solid var(--hq-leaf);
+            outline-offset: 3px;
+        }
+
+        .hq-root a:hover {
+            color: inherit;
+        }
+
+        .hq-root a.hq-brand:hover {
+            color: var(--hq-deep);
+        }
+
+        .hq-root :is(h1, h2, h3) {
+            margin-top: 0;
+        }
+
+        /* ---------- stage + panels ---------- */
+        .hq-stage {
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: var(--hq-tabbar);
+            overflow-y: auto;
+            overflow-x: hidden;
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+            overscroll-behavior: contain;
+            outline: none;
+            background: var(--hq-blue);
+            hyphens: manual;
+        }
+
+        .hq-panel {
+            min-height: 100%;
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            padding-block: 88px 104px;
+        }
+
+        .hq-inner {
+            width: min(1100px, 100%);
+            margin-inline: auto;
+            padding-left: var(--hq-gutter-l);
+            padding-right: var(--hq-gutter-r);
+            position: relative;
+        }
+
+        .hq-blue1 {
+            background: var(--hq-blue);
+        }
+
+        .hq-blue2 {
+            background: var(--hq-blue-2);
+        }
+
+        .hq-navy {
+            background: var(--hq-navy);
+        }
+
+        .hq-green {
+            background: var(--hq-deep);
+        }
+
+        .hq-mint {
+            background: var(--hq-mint);
+            color: var(--hq-text);
+        }
+
+        .hq-light {
+            background: var(--hq-bg);
+            color: var(--hq-text);
+        }
+
+        .hq-final {
+            background: var(--hq-forest);
+        }
+
+        .hq-eyebrow {
+            font-size: .85rem;
+            font-weight: 700;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: var(--hq-on-blue);
+            margin: 0 0 1rem;
+            display: flex;
+            gap: .75rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .hq-eyebrow .hq-step {
+            padding: .15rem .6rem;
+            border: 1.5px solid currentColor;
+            border-radius: 30px;
+            letter-spacing: .06em;
+        }
+
+        .hq-mint .hq-eyebrow, .hq-light .hq-eyebrow {
+            color: var(--hq-counter);
+        }
+
+        .hq-green .hq-eyebrow, .hq-final .hq-eyebrow {
+            color: var(--hq-leaf);
+        }
+
+        /* ---------- stat chapters ---------- */
+        .hq-big {
+            display: flex;
+            align-items: baseline;
+            flex-wrap: wrap;
+            column-gap: .25em;
+            row-gap: .1em;
+            padding-bottom: .08em;
+            line-height: .9;
+            font-weight: 800;
+            letter-spacing: -.045em;
+            font-variant-numeric: tabular-nums;
+            transform: translateY(calc(var(--p, 0) * 70px)) scale(calc(1 - var(--p, 0) * var(--p, 0) * .12));
+            transform-origin: left center;
+            will-change: transform;
+        }
+
+        .hq-num {
+            font-size: clamp(5.5rem, min(22vw, 30vh), 16rem);
+        }
+
+        .hq-unit {
+            font-size: clamp(1.6rem, min(5vw, 8vh), 4.5rem);
+            letter-spacing: -.03em;
+            color: var(--hq-leaf);
+        }
+
+        .hq-lede {
+            font-size: clamp(1.25rem, 2.6vw, 2rem);
+            line-height: 1.25;
+            font-weight: 600;
+            max-width: 30ch;
+            margin: 1.75rem 0 .75rem;
+            text-wrap: balance;
+        }
+
+        .hq-sub {
+            font-size: clamp(1rem, 1.5vw, 1.2rem);
+            color: var(--hq-on-blue);
+            max-width: 52ch;
+            margin: 0 0 1.25rem;
+        }
+
+        .hq-source {
+            font-size: .8rem;
+            color: rgba(255, 255, 255, .72);
+            margin: 0;
+        }
+
+        .hq-next {
+            display: inline-flex;
+            align-items: center;
+            gap: .6rem;
+            margin-top: 1.5rem;
+            background: none;
+            border: 1.5px solid rgba(255, 255, 255, .5);
+            color: #fff;
+            border-radius: 30px;
+            padding: .55rem 1.1rem;
+            font: inherit;
+            font-weight: 600;
+            cursor: pointer;
+            min-height: 44px;
+        }
+
+        .hq-next:hover {
+            background: rgba(255, 255, 255, .14);
+        }
+
+        .hq-next svg {
+            animation: hq-bob 1.6s ease-in-out infinite;
+        }
+
+        @keyframes hq-bob {
+            50% {
+                transform: translateY(4px);
+            }
+        }
+
+        .hq-ticker {
+            display: inline-flex;
+            flex-direction: column;
+            margin: 1rem 0 1.25rem;
+            padding: .9rem 1.25rem;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, .12);
+        }
+
+        .hq-ticker b {
+            font-size: clamp(1.8rem, 5vw, 3rem);
+            font-variant-numeric: tabular-nums;
+            letter-spacing: -.02em;
+            line-height: 1.1;
+        }
+
+        .hq-ticker span {
+            font-size: .95rem;
+            color: var(--hq-on-blue);
+        }
+
+        .hq-people {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: clamp(.4rem, 1.2vw, .9rem);
+            max-width: 560px;
+            margin: 1.75rem 0 .5rem;
+        }
+
+        .hq-people i {
+            aspect-ratio: 1;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, .55);
+        }
+
+        .hq-people i:nth-child(-n+4) {
+            background: var(--hq-leaf);
+            border-color: var(--hq-leaf);
+        }
+
+        .hq-people-panel.is-active .hq-people i:nth-child(-n+4) {
+            animation: hq-pop .5s cubic-bezier(.3, 1.6, .5, 1) both;
+        }
+
+        .hq-people-panel.is-active .hq-people i:nth-child(1) {
+            animation-delay: .5s;
+        }
+
+        .hq-people-panel.is-active .hq-people i:nth-child(2) {
+            animation-delay: .65s;
+        }
+
+        .hq-people-panel.is-active .hq-people i:nth-child(3) {
+            animation-delay: .8s;
+        }
+
+        .hq-people-panel.is-active .hq-people i:nth-child(4) {
+            animation-delay: .95s;
+        }
+
+        @keyframes hq-pop {
+            from {
+                transform: scale(.3);
+                opacity: .2;
+                background: transparent;
+            }
+        }
+
+        .hq-people-note {
+            font-size: .95rem;
+            color: var(--hq-on-blue);
+            margin: 0 0 1rem;
+        }
+
+        /* ---------- comparison bars ---------- */
+        .hq-bars {
+            display: grid;
+            gap: 1rem;
+            max-width: 560px;
+            margin: 1.5rem 0 1rem;
+        }
+
+        .hq-bar p {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            margin: 0 0 .35rem;
+            font-size: .95rem;
+        }
+
+        .hq-bar b {
+            font-variant-numeric: tabular-nums;
+        }
+
+        .hq-track {
+            height: 14px;
+            border-radius: 7px;
+            background: rgba(255, 255, 255, .16);
+            overflow: hidden;
+        }
+
+        .hq-track i {
+            display: block;
+            height: 100%;
+            width: var(--w, 0);
+            border-radius: 7px;
+            background: var(--hq-leaf);
+        }
+
+        .is-active .hq-track i {
+            animation: hq-grow .9s cubic-bezier(.2, .8, .3, 1) .4s both;
+        }
+
+        @keyframes hq-grow {
+            from {
+                width: 0;
+            }
+        }
+
+        .hq-w-12 { --w: 12%; }
+        .hq-w-13 { --w: 13%; }
+        .hq-w-25 { --w: 25%; }
+        .hq-w-26 { --w: 26%; }
+        .hq-w-48 { --w: 48%; }
+        .hq-w-50 { --w: 50%; }
+
+        /* ---------- why register ---------- */
+        .hq-h-xl {
+            font-size: clamp(2.2rem, 6.5vw, 5rem);
+            line-height: 1;
+            font-weight: 800;
+            letter-spacing: -.035em;
+            margin: 0 0 1rem;
+            max-width: 16ch;
+            text-wrap: balance;
+        }
+
+        .hq-h-xl em {
+            font-style: normal;
+            color: var(--hq-leaf);
+        }
+
+        .hq-h-lg {
+            font-size: clamp(1.8rem, 4.5vw, 3.2rem);
+            line-height: 1.05;
+            font-weight: 800;
+            letter-spacing: -.03em;
+            margin: 0 0 1.5rem;
+            max-width: 20ch;
+            text-wrap: balance;
+            color: var(--hq-forest);
+        }
+
+        .hq-intro {
+            font-size: clamp(1.05rem, 1.7vw, 1.3rem);
+            max-width: 46ch;
+            margin: 0 0 1.75rem;
+            color: rgba(255, 255, 255, .86);
+        }
+
+        .hq-benefits {
+            list-style: none;
+            margin: 0 0 1.75rem;
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+        }
+
+        .hq-benefits li {
+            background: rgba(255, 255, 255, .08);
+            border: 1px solid rgba(179, 225, 153, .28);
+            border-radius: 16px;
+            padding: 1.1rem 1.25rem;
+            min-width: 0;
+        }
+
+        .hq-benefits svg {
+            color: var(--hq-leaf);
+            margin-bottom: .5rem;
+        }
+
+        .hq-benefits h3 {
+            margin: 0 0 .25rem;
+            font-size: 1.1rem;
+        }
+
+        .hq-benefits p {
+            margin: 0;
+            font-size: .95rem;
+            color: rgba(255, 255, 255, .84);
+        }
+
+        /* ---------- proof ---------- */
+        .hq-counters {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin: 0 0 1.5rem;
+        }
+
+        .hq-counter {
+            background: #fff;
+            border: 1px solid var(--color-border-green, #b2dfdb);
+            border-radius: 12px;
+            padding: 1rem 1.1rem;
+            box-shadow: var(--shadow-md, 0 2px 10px rgba(0, 0, 0, .06));
+            min-width: 0;
+        }
+
+        .hq-counter b {
+            display: block;
+            font-size: clamp(1.7rem, 4vw, 3rem);
+            line-height: 1.05;
+            letter-spacing: -.03em;
+            color: var(--hq-counter);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .hq-counter span {
+            font-size: .92rem;
+        }
+
+        .hq-stories {
+            list-style: none;
+            margin: 0;
+            padding: 0 0 .5rem;
+            display: grid;
+            grid-auto-flow: column;
+            grid-auto-columns: minmax(240px, 1fr);
+            gap: 1rem;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            overscroll-behavior-x: contain;
+        }
+
+        .hq-stories li {
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+            background: #fff;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow-md, 0 2px 10px rgba(0, 0, 0, .06));
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+
+        .hq-stories img {
+            width: 100%;
+            aspect-ratio: 16 / 10;
+            object-fit: cover;
+            display: block;
+        }
+
+        .hq-stories p {
+            margin: 0;
+            padding: .8rem 1rem 1rem;
+            font-size: .92rem;
+        }
+
+        .hq-link {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            font-weight: 700;
+            text-decoration: none;
+            margin-top: 1rem;
+            min-height: 44px;
+            color: var(--hq-forest);
+        }
+
+        .hq-link span:last-child {
+            transition: transform .2s;
+        }
+
+        .hq-link:hover span:last-child {
+            transform: translateX(4px);
+        }
+
+        /* ---------- how ---------- */
+        .hq-steps {
+            list-style: none;
+            margin: 0 0 2rem;
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 1.25rem;
+            counter-reset: hq-s;
+        }
+
+        .hq-steps li {
+            counter-increment: hq-s;
+            background: #fff;
+            border-radius: 16px;
+            padding: 1.4rem;
+            box-shadow: var(--shadow-md, 0 2px 10px rgba(0, 0, 0, .06));
+            min-width: 0;
+        }
+
+        .hq-steps li::before {
+            content: counter(hq-s);
+            display: grid;
+            place-items: center;
+            width: 2.4rem;
+            height: 2.4rem;
+            border-radius: 50%;
+            background: var(--hq-blue);
+            color: #fff;
+            font-weight: 800;
+            margin-bottom: .8rem;
+        }
+
+        .hq-steps h3 {
+            margin: 0 0 .3rem;
+            font-size: 1.2rem;
+            color: var(--hq-forest);
+        }
+
+        .hq-steps p {
+            margin: 0;
+        }
+
+        /* ---------- final ---------- */
+        .hq-final-links {
+            list-style: none;
+            margin: 2rem 0 0;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: .25rem 1.75rem;
+        }
+
+        .hq-final-links a {
+            display: inline-flex;
+            align-items: center;
+            min-height: 44px;
+            color: var(--hq-leaf);
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .hq-final-links a:hover {
+            text-decoration: underline;
+        }
+
+        .hq-legal {
+            margin-top: .5rem;
+            font-size: .85rem;
+        }
+
+        .hq-legal a {
+            color: rgba(255, 255, 255, .8);
+            font-weight: 400;
+        }
+
+        /* ---------- buttons ---------- */
+        .hq-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: .6rem;
+            min-height: 48px;
+            padding: .8rem 1.75rem;
+            border: 0;
+            border-radius: 30px;
+            background: var(--hq-success);
+            color: #000;
+            font: inherit;
+            font-size: 18px;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, .2);
+            transition: transform .2s, background .2s;
+        }
+
+        .hq-root a.hq-btn:hover {
+            background: var(--hq-success-hover);
+            color: #000;
+            transform: scale(1.05);
+        }
+
+        .hq-btn.hq-ghost {
+            background: transparent;
+            color: var(--hq-forest);
+            border: 2px solid currentColor;
+            box-shadow: none;
+        }
+
+        .hq-root a.hq-btn.hq-ghost:hover {
+            background: rgba(7, 78, 59, .08);
+            color: var(--hq-forest);
+        }
+
+        .hq-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: .75rem;
+        }
+
+        /* ---------- sticky call to action (always visible) ---------- */
+        .hq-sticky {
+            position: fixed;
+            z-index: 900;
+            right: var(--hq-gutter-r);
+            bottom: calc(var(--hq-tabbar) + 16px);
+        }
+
+        .hq-sticky .hq-btn {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, .35);
+            border: 2px solid rgba(0, 0, 0, .85);
+        }
+
+        /* ---------- chrome ---------- */
+        .hq-brand {
+            position: fixed;
+            z-index: 900;
+            top: calc(12px + env(safe-area-inset-top, 0px));
+            left: var(--hq-gutter-l);
+            display: inline-flex;
+            align-items: center;
+            gap: .6rem;
+            background: #fff;
+            color: var(--hq-deep);
+            padding: .3rem 1rem .3rem .4rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 800;
+            letter-spacing: -.01em;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, .18);
+            min-height: 44px;
+        }
+
+        .hq-brand img {
+            width: 34px;
+            height: 34px;
+            display: block;
+        }
+
+        .hq-brand small {
+            font-weight: 500;
+            color: var(--hq-counter);
+            display: none;
+        }
+
+        .hq-progress {
+            position: fixed;
+            z-index: 950;
+            top: 0;
+            left: 0;
+            height: 4px;
+            width: 100%;
+            transform-origin: left;
+            transform: scaleX(0);
+            background: var(--hq-leaf);
+        }
+
+        .hq-dots {
+            position: fixed;
+            z-index: 900;
+            right: var(--hq-gutter-r);
+            top: calc(50% - var(--hq-tabbar) / 2);
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .hq-dots button {
+            width: 28px;
+            height: 28px;
+            padding: 0;
+            background: none;
+            border: 0;
+            cursor: pointer;
+            display: grid;
+            place-items: center;
+        }
+
+        .hq-dots button::after {
+            content: "";
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            background: transparent;
+            transition: transform .2s, background .2s;
+            box-shadow: 0 0 0 1px rgba(0, 0, 0, .25);
+        }
+
+        .hq-dots button[aria-current="true"]::after {
+            background: #fff;
+            transform: scale(1.4);
+        }
+
+        .hq-msgs p {
+            margin: 0 0 1rem;
+            padding: .75rem 1rem;
+            border-radius: 12px;
+            background: #fff;
+            color: var(--hq-text);
+            font-weight: 600;
+        }
+
+        .hq-msgs .error-message {
+            color: #b00020;
+        }
+
+        .hq-msgs .success-message {
+            color: #176d3b;
+        }
+
+        @media (min-width: 900px) {
+            /* Desktop: no bottom tab bar on the start page, so no white strip */
+            .hq-root {
+                --hq-tabbar: 0px;
+            }
+
+            body:has(.hq-stage) .tabbar {
+                display: none;
+            }
+
+            body:has(.hq-stage) {
+                padding-left: 0;
+                padding-right: 0;
+            }
+
+            .hq-stage, .hq-panel {
+                width: 100%;
+            }
+
+            .hq-brand small {
+                display: inline;
+            }
+
+            .hq-brand small::before {
+                content: "\00b7\00a0";
+            }
+
+            .hq-inner {
+                padding-right: calc(var(--hq-gutter-r) + 40px);
+            }
+
+            .hq-sticky {
+                right: calc(var(--hq-gutter-r) + 44px);
+            }
+        }
+
+        @media (max-width: 899px) {
+            .hq-dots {
+                display: none;
+            }
+
+            .hq-counters {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .hq-sticky {
+                left: var(--hq-gutter-l);
+            }
+
+            .hq-sticky .hq-btn {
+                width: 100%;
+            }
+
+            .hq-panel {
+                padding-block: 80px 96px;
+            }
+        }
+
+        @media (max-height: 640px) {
+            .hq-stage {
+                scroll-snap-type: y proximity;
+            }
+
+            .hq-panel {
+                padding-block: 72px 88px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .hq-stage {
+                scroll-behavior: auto;
+            }
+
+            .hq-big {
+                transform: none !important;
+            }
+
+            .hq-next svg, .hq-people-panel.is-active .hq-people i {
+                animation: none !important;
+            }
+
+            .hq-btn, .hq-root a.hq-btn:hover {
+                transition: none;
+                transform: none;
+            }
+        }
+    </style>
+
+    <div class="hq-root">
+        <div class="hq-progress" id="hq-progress" aria-hidden="true"></div>
+
+        <nav class="hq-dots" id="hq-dots" aria-label="{% trans 'Kapitel' %}"></nav>
+
+        <div class="hq-sticky">
+            {% if user.is_authenticated %}
+                <a class="hq-btn" href="{% url 'dashboard' %}">{% trans "Zum Dashboard" %} <span
+                        aria-hidden="true">→</span></a>
+            {% else %}
+                <a class="hq-btn" href="{% url 'register_view' %}">{% trans "Registrieren" %}</a>
+            {% endif %}
+        </div>
+
+        {% trans "Weiter" as next_label %}
+        <main class="hq-stage" id="hq-stage" tabindex="0" aria-label="{% trans 'Fakten zum Klimawandel' %}">
+
+            <!-- Definition (always first) -->
+            <section class="hq-panel hq-blue1" data-title="{% trans 'Was ist der Klimawandel?' %}">
+                <div class="hq-inner">
+                    {% if messages %}
+                        <div class="hq-msgs">
+                            {% for message in messages %}
+                                <p class="{{ message.level_tag }}-message">{{ message|safe_html }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    <p class="hq-eyebrow">{% trans "Definition" %}</p>
+                    <h1 class="hq-h-xl">{% trans "Was ist der Klimawandel?" %}</h1>
+                    <p class="hq-intro">{% trans "Der Klimawandel bezeichnet die langfristige Veränderung des globalen Klimas. Derzeit erwärmt sich das Klima, vor allem durch den Ausstoß von Treibhausgasen, insbesondere CO₂, die zum Beispiel bei der Verbrennung fossiler Energieträger entstehen." %}</p>
+                    <p class="hq-sub">{% trans "Dass der Mensch dafür verantwortlich ist, ist wissenschaftlich eindeutig belegt." %}</p>
+                    <p class="hq-source">{% trans "Quellen: IPCC Glossar 2022, IPCC Synthesebericht 2023, NASA" %}</p>
+                    {% include "_facts_next.html" %}
+                </div>
+            </section>
+
+            <!-- Facts (shuffled by script) -->
+
+            <!-- 1,5 °C -->
+            <section class="hq-panel" data-fact data-title="{% trans '1,5 Grad' %}">
+                <div class="hq-inner">
+                    <p class="hq-eyebrow">{% trans "Klimawandel in Zahlen" %} <span class="hq-step"></span></p>
+                    <div class="hq-big"><span class="hq-num" data-count="1.5" data-dec="1">{% trans "1,5" %}</span><span
+                            class="hq-unit">°C</span></div>
+                    <p class="hq-lede">{% trans "So viel wärmer war die Erde 2024 im Schnitt als vor der Industrialisierung. Zum ersten Mal über ein ganzes Jahr." %}</p>
+                    <p class="hq-sub">{% trans "Hitzewellen, Dürren und Überschwemmungen sind schon heute spürbar. Jedes weitere Zehntelgrad macht sie schlimmer." %}</p>
+                    <p class="hq-source">{% trans "Quelle: WMO, State of the Global Climate 2024" %}</p>
+                    {% include "_facts_next.html" %}
+                </div>
+            </section>
+
+            <!-- CO2 -->
+            <section class="hq-panel" data-fact data-title="{% trans '37 Milliarden Tonnen' %}">
+                <div class="hq-inner">
+                    <p class="hq-eyebrow">{% trans "Klimawandel in Zahlen" %} <span class="hq-step"></span></p>
+                    <div class="hq-big"><span class="hq-num" data-count="37">37</span><span
+                            class="hq-unit">{% trans "Mrd. t CO₂" %}</span></div>
+                    <p class="hq-lede">{% trans "So viel CO₂ setzen wir jedes Jahr durch Kohle, Öl und Gas frei. Über 1.000 Tonnen pro Sekunde." %}</p>
+                    <div class="hq-ticker"><b id="hq-ticker">0 t</b><span>{% trans "CO₂, seit du diese Seite geöffnet hast" %}</span>
+                    </div>
+                    <p class="hq-source">{% trans "Quelle: Global Carbon Budget 2024" %}</p>
+                    {% include "_facts_next.html" %}
+                </div>
+            </section>
+
+            <!-- Vulnerable people -->
+            <section class="hq-panel hq-people-panel" data-fact data-title="{% trans '3,3 Milliarden Menschen' %}">
+                <div class="hq-inner">
+                    <p class="hq-eyebrow">{% trans "Klimawandel in Zahlen" %} <span class="hq-step"></span></p>
+                    <div class="hq-big"><span class="hq-num" data-count="3.3" data-dec="1">{% trans "3,3" %}</span><span
+                            class="hq-unit">{% trans "Mrd. Menschen" %}</span></div>
+                    <p class="hq-lede">{% trans "Leben in Regionen, die besonders anfällig für die Folgen des Klimawandels sind. In diesen Gebieten ist die Sterblichkeit durch Überschwemmungen, Dürren und Stürme 15-mal höher als in schwach betroffenen Regionen." %}</p>
+                    <div class="hq-people" aria-hidden="true">
+                        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+                    </div>
+                    <p class="hq-people-note">{% trans "Etwa 4 von 10 Menschen weltweit." %}</p>
+                    <p class="hq-source">{% trans "Quelle: IPCC Synthesebericht 2023 (3,3 bis 3,6 Milliarden Menschen)" %}</p>
+                    {% include "_facts_next.html" %}
+                </div>
+            </section>
+
+            <!-- Heat days -->
+            <section class="hq-panel" data-fact data-title="{% trans '19 Hitzetage' %}">
+                <div class="hq-inner">
+                    <p class="hq-eyebrow">{% trans "Folgen: Hitze" %} <span class="hq-step"></span></p>
+                    <div class="hq-big"><span class="hq-num" data-count="19">19</span><span
+                            class="hq-unit">{% trans "Tage pro Jahr" %}</span></div>
+                    <p class="hq-lede">{% trans "So viele lebensbedrohliche Hitzetage erlebte ein Mensch zwischen 2020 und 2024 im Schnitt pro Jahr." %}</p>
+                    <p class="hq-sub">{% trans "16 davon wären ohne den menschengemachten Klimawandel nicht zu erwarten gewesen." %}</p>
+                    <p class="hq-source">{% trans "Quelle: Lancet Countdown on Health and Climate Change" %}</p>
+                    {% include "_facts_next.html" %}
+                </div>
+            </section>
+
+            <!-- Heat probability -->
+            <section class="hq-panel" data-fact data-title="{% trans '13,9-mal wahrscheinlicher' %}">
+                <div class="hq-inner">
+                    <p class="hq-eyebrow">{% trans "Folgen: Hitze" %} <span class="hq-step"></span></p>
+                    <div class="hq-big"><span class="hq-num" data-count="13.9" data-dec="1">{% trans "13,9" %}</span><span
+                            class="hq-unit">{% trans "mal wahrscheinlicher" %}</span></div>
+                    <p class="hq-lede">{% trans "Ein Hitzeereignis, das ohne menschlichen Einfluss alle 50 Jahre aufträte, ist bei 2,7 °C Erwärmung fast 14-mal wahrscheinlicher." %}</p>
+                    <p class="hq-sub">{% trans "Schon bei den heutigen 1,2 °C ist es 4,8-mal wahrscheinlicher, bei 2,0 °C 8,6-mal." %}</p>
+                    <p class="hq-source">{% trans "Quelle: IPCC, Sechster Sachstandsbericht, Arbeitsgruppe I (2021)" %}</p>
+                    {% include "_facts_next.html" %}
+                </div>
+            </section>
+
+            <!-- Mortality: heat deaths -->
+            <section class="hq-panel" data-fact data-title="{% trans '546.000 Hitzetote' %}">
+                <div class="hq-inner">
+                    <p class="hq-eyebrow">{% trans "Folgen: Sterblichkeit" %} <span class="hq-step"></span></p>
+                    <div class="hq-big"><span class="hq-num" data-count="546000">{% trans "546.000" %}</span><span
+                            class="hq-unit">{% trans "Todesfälle pro Jahr" %}</span></div>
+                    <p class="hq-lede">{% trans "So viele Menschen sterben im Schnitt jährlich an den Folgen von Hitze. Seit 1990 ist die Zahl um 63 % gestiegen." %}</p>
+                    <p class="hq-sub">{% trans "Etwa 37 % dieser Todesfälle sind dem Klimawandel zuzurechnen." %}</p>
+                    <p class="hq-source">{% trans "Quellen: Lancet Countdown on Health and Climate Change, Studie zu hitzebedingter Sterblichkeit" %}</p>
+                    {% include "_facts_next.html" %}
+                </div>
+            </section>
+
+            <!-- Mortality: 2050 -->
+            <section class="hq-panel" data-fact data-title="{% trans '14,5 Millionen Tote bis 2050' %}">
+                <div class="hq-inner">
+                    <p class="hq-eyebrow">{% trans "Folgen: Sterblichkeit" %} <span class="hq-step"></span></p>
+                    <div class="hq-big"><span class="hq-num" data-count="14.5" data-dec="1">{% trans "14,5" %}</span><span
+                            class="hq-unit">{% trans "Mio. Todesfälle" %}</span></div>
+                    <p class="hq-lede">{% trans "So viele Todesfälle durch die Folgen des Klimawandels prognostiziert das Weltwirtschaftsforum für 2050." %}</p>
+                    <p class="hq-source">{% trans "Quelle: Weltwirtschaftsforum" %}</p>
+                    {% include "_facts_next.html" %}
+                </div>
+            </section>
+
+            <!-- Finance: lost work + disasters -->
+            <section class="hq-panel" data-fact data-title="{% trans '1,09 Billionen US-Dollar' %}">
+                <div class="hq-inner">
+                    <p class="hq-eyebrow">{% trans "Folgen: Finanzen" %} <span class="hq-step"></span></p>
+                    <div class="hq-big"><span class="hq-num" data-count="1.09" data-dec="2">{% trans "1,09" %}</span><span
+                            class="hq-unit">{% trans "Bio. US-Dollar" %}</span></div>
+                    <p class="hq-lede">{% trans "Schaden durch Hitze im Jahr 2024: 639 Milliarden verlorene Arbeitsstunden weltweit." %}</p>
+                    <p class="hq-sub">{% trans "Dazu kamen 304 Milliarden US-Dollar Schäden durch Extremwetterereignisse, die durch den Klimawandel häufiger und extremer wurden." %}</p>
+                    <p class="hq-source">{% trans "Quelle: Lancet Countdown on Health and Climate Change" %}</p>
+                    {% include "_facts_next.html" %}
+                </div>
+            </section>
+
+            <!-- Finance: climate costs Germany -->
+            <section class="hq-panel" data-fact data-title="{% trans '643 Milliarden Euro' %}">
+                <div class="hq-inner">
+                    <p class="hq-eyebrow">{% trans "Folgen: Finanzen" %} <span class="hq-step"></span></p>
+                    <div class="hq-big"><span class="hq-num" data-count="643">643</span><span
+                            class="hq-unit">{% trans "Mrd. Euro" %}</span></div>
+                    <p class="hq-lede">{% trans "Klimakosten verursachte Deutschland allein 2025 durch seine Emissionen von 649 Millionen Tonnen CO₂-Äquivalenten." %}</p>
+                    <p class="hq-sub">{% trans "Das Umweltbundesamt beziffert eine Tonne CO₂ auf rund 1.000 Euro Klimakosten, mit steigender Tendenz. Getragen werden sie zu einem großen Teil von künftigen Generationen." %}</p>
+                    <p class="hq-source">{% trans "Quellen: Umweltbundesamt (Klimakosten, CO₂-Ausstoß 2025)" %}</p>
+                    {% include "_facts_next.html" %}
+                </div>
+            </section>
+
+            <!-- Social justice -->
+            <section class="hq-panel" data-fact data-title="{% trans 'Ungerechte Verteilung' %}">
+                <div class="hq-inner">
+                    <p class="hq-eyebrow">{% trans "Folgen: Gerechtigkeit" %} <span class="hq-step"></span></p>
+                    <div class="hq-big"><span class="hq-num" data-count="48">48</span><span
+                            class="hq-unit">{% trans "% der Emissionen" %}</span></div>
+                    <p class="hq-lede">{% trans "verursachen die reichsten 10 % der Weltbevölkerung. Die ärmere Hälfte kommt auf nur rund 12 %." %}</p>
+                    <div class="hq-bars">
+                        <div class="hq-bar">
+                            <p><span>{% trans "Reichste 10 %" %}</span><b>{% trans "28,7 t CO₂e pro Kopf" %}</b></p>
+                            <div class="hq-track"><i class="hq-w-48"></i></div>
+                        </div>
+                        <div class="hq-bar">
+                            <p><span>{% trans "Ärmere Hälfte" %}</span><b>{% trans "1,4 t CO₂e pro Kopf" %}</b></p>
+                            <div class="hq-track"><i class="hq-w-12"></i></div>
+                        </div>
+                    </div>
+                    <p class="hq-sub">{% trans "Gleichzeitig trifft der Klimawandel ärmere Menschen besonders stark, während sich reiche Menschen besser schützen können." %}</p>
+                    <p class="hq-source">{% trans "Quellen: Carbon Inequality (Zahlen für 2019), Studie zu ungleicher Klimaerhitzung" %}</p>
+                    {% include "_facts_next.html" %}
+                </div>
+            </section>
+
+            <!-- Armed conflicts -->
+            <section class="hq-panel" data-fact data-title="{% trans 'Bewaffnete Konflikte' %}">
+                <div class="hq-inner">
+                    <p class="hq-eyebrow">{% trans "Folgen: Konflikte" %} <span class="hq-step"></span></p>
+                    <div class="hq-big"><span class="hq-num">3–20</span><span class="hq-unit">%</span></div>
+                    <p class="hq-lede">{% trans "des Konfliktrisikos des vergangenen Jahrhunderts wurden Schätzungen zufolge vom Klima beeinflusst." %}</p>
+                    <div class="hq-bars">
+                        <div class="hq-bar">
+                            <p><span>{% trans "Bei 2 °C Erwärmung" %}</span><b>13 %</b></p>
+                            <div class="hq-track"><i class="hq-w-13"></i></div>
+                        </div>
+                        <div class="hq-bar">
+                            <p><span>{% trans "Bei 4 °C Erwärmung" %}</span><b>26 %</b></p>
+                            <div class="hq-track"><i class="hq-w-26"></i></div>
+                        </div>
+                    </div>
+                    <p class="hq-source">{% trans "Quelle: Studie zu bewaffneten Konflikten und Klima (Erwärmung im Vergleich zum vorindustriellen Niveau)" %}</p>
+                    {% include "_facts_next.html" %}
+                </div>
+            </section>
+
+            <!-- Biodiversity -->
+            <section class="hq-panel" data-fact data-title="{% trans 'Artenvielfalt' %}">
+                <div class="hq-inner">
+                    <p class="hq-eyebrow">{% trans "Folgen: Artenvielfalt" %} <span class="hq-step"></span></p>
+                    <div class="hq-big"><span class="hq-num" data-count="50">50</span><span
+                            class="hq-unit">{% trans "% aller Arten" %}</span></div>
+                    <p class="hq-lede">{% trans "der Tier- und Pflanzenarten würden aussterben, wenn die CO₂-Emissionen wie bisher weitergehen." %}</p>
+                    <div class="hq-bars">
+                        <div class="hq-bar">
+                            <p><span>{% trans "Weiter wie bisher" %}</span><b>50 %</b></p>
+                            <div class="hq-track"><i class="hq-w-50"></i></div>
+                        </div>
+                        <div class="hq-bar">
+                            <p><span>{% trans "2-°C-Ziel erreicht" %}</span><b>25 %</b></p>
+                            <div class="hq-track"><i class="hq-w-25"></i></div>
+                        </div>
+                    </div>
+                    <p class="hq-source">{% trans "Quelle: Studie zu Klimawandel und Artenvielfalt" %}</p>
+                    {% include "_facts_next.html" %}
+                </div>
+            </section>
+
+            <!-- Final (always last) -->
+            <section class="hq-panel hq-final" data-title="{% trans 'Und jetzt?' %}">
+                <div class="hq-inner">
+                    <p class="hq-eyebrow">{% trans "Und jetzt?" %}</p>
+                    <h2 class="hq-h-xl">{% trans "Du kannst etwas ändern." %}</h2>
+                    <p class="hq-intro">{% trans "Jede eingesparte Tonne CO₂ zählt. Mit ClimateQuest machst du daraus ein Spiel." %}</p>
+                    <div class="hq-row">
+                        {% if user.is_authenticated %}
+                            <a class="hq-btn" href="{% url 'dashboard' %}">{% trans "Zum Dashboard" %} <span
+                                    aria-hidden="true">→</span></a>
+                        {% else %}
+                            <a class="hq-btn" href="{% url 'register_view' %}">{% trans "Registrieren" %}</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script nonce="{{ request.csp_script_nonce }}">
+        (function () {
+            const stage = document.getElementById('hq-stage');
+
+            // Random order of the facts. The definition stays first, the call to action last.
+            const facts = Array.from(stage.querySelectorAll('[data-fact]'));
+            const lastPanel = stage.lastElementChild;
+            for (let i = facts.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [facts[i], facts[j]] = [facts[j], facts[i]];
+            }
+            const bgCycle = ['hq-blue2', 'hq-navy', 'hq-green', 'hq-blue1'];
+            facts.forEach((f, i) => {
+                f.classList.add(bgCycle[i % bgCycle.length]);
+                const step = f.querySelector('.hq-step');
+                if (step) step.textContent = (i + 1) + ' / ' + facts.length;
+                stage.insertBefore(f, lastPanel);
+            });
+
+            const panels = Array.from(stage.querySelectorAll('.hq-panel'));
+            const dotsNav = document.getElementById('hq-dots');
+            const progress = document.getElementById('hq-progress');
+            const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const locale = document.documentElement.lang || 'de';
+            const COUNT_MS = 1000; // count-up never takes longer than 1 second
+            const fmt = (n, d) => n.toLocaleString(locale, {minimumFractionDigits: d, maximumFractionDigits: d});
+            const smooth = reduced ? 'auto' : 'smooth';
+
+            // Chapter dots
+            const dots = panels.map((p, i) => {
+                const b = document.createElement('button');
+                b.type = 'button';
+                b.setAttribute('aria-label', (i + 1) + ': ' + p.dataset.title);
+                b.addEventListener('click', () => p.scrollIntoView({behavior: smooth}));
+                dotsNav.appendChild(b);
+                return b;
+            });
+
+            // Count-up. The final value is already in the HTML; the animation is an enhancement.
+            function countUp(el) {
+                if (el.dataset.done) return;
+                el.dataset.done = '1';
+                if (reduced) return;
+                const to = parseFloat(el.dataset.count);
+                const d = parseInt(el.dataset.dec || '0', 10);
+                if (!isFinite(to)) return;
+                const t0 = performance.now();
+
+                function frame(now) {
+                    const p = Math.min((now - t0) / COUNT_MS, 1);
+                    el.textContent = fmt(to * (1 - Math.pow(1 - p, 3)), d);
+                    if (p < 1) requestAnimationFrame(frame); else el.textContent = fmt(to, d);
+                }
+
+                requestAnimationFrame(frame);
+            }
+
+            function countPanel(panel) {
+                panel.querySelectorAll('[data-count]').forEach(countUp);
+            }
+
+            // Start counting as soon as a chapter is entered (about 15% visible).
+            const seen = new IntersectionObserver(entries => {
+                entries.forEach(e => {
+                    if (e.isIntersecting) countPanel(e.target);
+                });
+            }, {root: stage, threshold: 0.15});
+            const active = new IntersectionObserver(entries => {
+                entries.forEach(e => {
+                    if (!e.isIntersecting) return;
+                    panels.forEach((p, i) => {
+                        const on = p === e.target;
+                        p.classList.toggle('is-active', on);
+                        if (on) dots.forEach((d, j) => d.setAttribute('aria-current', j === i ? 'true' : 'false'));
+                    });
+                    countPanel(e.target);
+                });
+            }, {root: stage, threshold: 0.6});
+            panels.forEach(p => {
+                seen.observe(p);
+                active.observe(p);
+            });
+
+            // Scroll effects: progress bar and parallax variable per chapter
+            let ticking = false;
+
+            function onScroll() {
+                if (ticking) return;
+                ticking = true;
+                requestAnimationFrame(() => {
+                    const max = stage.scrollHeight - stage.clientHeight;
+                    progress.style.transform = 'scaleX(' + (max > 0 ? stage.scrollTop / max : 0) + ')';
+                    if (!reduced) panels.forEach(p => {
+                        const v = (p.offsetTop - stage.scrollTop) / stage.clientHeight;
+                        if (Math.abs(v) < 1.2) p.style.setProperty('--p', Math.max(-1, Math.min(1, v)).toFixed(3));
+                    });
+                    ticking = false;
+                });
+            }
+
+            stage.addEventListener('scroll', onScroll, {passive: true});
+            onScroll();
+
+            stage.querySelectorAll('[data-next]').forEach(b => {
+                b.addEventListener('click', () => b.closest('.hq-panel').nextElementSibling.scrollIntoView({behavior: smooth}));
+            });
+
+            // Live CO2 ticker: about 37 Gt per year = roughly 1,185 t per second
+            const ticker = document.getElementById('hq-ticker');
+            const startedAt = performance.now();
+            setInterval(() => {
+                ticker.textContent = fmt(Math.floor((performance.now() - startedAt) / 1000 * 1185), 0) + ' t';
+            }, 100);
+
+            const appLink = document.getElementById('hq-app-link');
+            if (appLink && typeof isStandalone !== 'undefined' && !isStandalone) {
+                appLink.hidden = false;
+            }
+
+            try {
+                stage.focus({preventScroll: true});
+            } catch (e) {
+            }
+        })();
+    </script>
+{% endblock %}

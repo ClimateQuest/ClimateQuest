@@ -1,3 +1,5 @@
+from typing import Any
+
 from django.shortcuts import render
 
 
@@ -11,3 +13,6 @@ def aknachhaltigkeit(request):
 
 def pastel_done(request):
     return render(request, "./pastel_done.html")
+
+def facts(request: Any):
+    return render(request, "./facts.html")

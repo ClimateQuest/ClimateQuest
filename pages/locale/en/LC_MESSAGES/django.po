@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-02 10:55+0100\n"
+"POT-Creation-Date: 2026-11-24 16:35+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -333,6 +333,475 @@ msgstr ""
 "Through upcycling, we can show that \"trash\" is often not trash at all, but"
 " valuable material for new, beautiful and useful things. This not only helps"
 " the environment but also is fun!"
+
+#: pages/templates/facts.html:7
+msgid "Hier findest du harte Zahlen und Fakten zur Klimakrise"
+msgstr "Hard numbers and facts about the climate crisis"
+
+#: pages/templates/facts.html:9
+msgid "Fakten"
+msgstr "Facts"
+
+#: pages/templates/facts.html:837
+msgid "Kapitel"
+msgstr "Chapters"
+
+#: pages/templates/facts.html:841 pages/templates/facts.html:1066
+msgid "Zum Dashboard"
+msgstr "To the dashboard"
+
+#: pages/templates/facts.html:844 pages/templates/facts.html:1069
+msgid "Registrieren"
+msgstr "Sign up"
+
+#: pages/templates/facts.html:848
+msgid "Weiter"
+msgstr "Next"
+
+#: pages/templates/facts.html:849
+msgid "Fakten zum Klimawandel"
+msgstr "Facts about climate change"
+
+#: pages/templates/facts.html:852 pages/templates/facts.html:862
+msgid "Was ist der Klimawandel?"
+msgstr "What is climate change?"
+
+#: pages/templates/facts.html:861
+msgid "Definition"
+msgstr "Definition"
+
+#: pages/templates/facts.html:863
+msgid ""
+"Der Klimawandel bezeichnet die langfristige Veränderung des globalen Klimas."
+" Derzeit erwärmt sich das Klima, vor allem durch den Ausstoß von "
+"Treibhausgasen, insbesondere CO₂, die zum Beispiel bei der Verbrennung "
+"fossiler Energieträger entstehen."
+msgstr ""
+"Climate change refers to the long-term shift in the global climate. The "
+"climate is currently warming, mainly because of greenhouse gas emissions, "
+"especially CO₂, which are released when fossil fuels are burned, for "
+"example."
+
+#: pages/templates/facts.html:864
+msgid ""
+"Dass der Mensch dafür verantwortlich ist, ist wissenschaftlich eindeutig "
+"belegt."
+msgstr ""
+"That humans are responsible for this is firmly established by science."
+
+#: pages/templates/facts.html:865
+msgid "Quellen: IPCC Glossar 2022, IPCC Synthesebericht 2023, NASA"
+msgstr "Sources: IPCC Glossary 2022, IPCC Synthesis Report 2023, NASA"
+
+#: pages/templates/facts.html:873
+msgid "1,5 Grad"
+msgstr "1.5 degrees"
+
+#: pages/templates/facts.html:875 pages/templates/facts.html:888
+#: pages/templates/facts.html:902
+msgid "Klimawandel in Zahlen"
+msgstr "Climate change in numbers"
+
+#: pages/templates/facts.html:876
+msgid "1,5"
+msgstr "1.5"
+
+#: pages/templates/facts.html:878
+msgid ""
+"So viel wärmer war die Erde 2024 im Schnitt als vor der Industrialisierung. "
+"Zum ersten Mal über ein ganzes Jahr."
+msgstr ""
+"That is how much warmer Earth was on average in 2024 than before "
+"industrialization. For the first time over a whole year."
+
+#: pages/templates/facts.html:879
+msgid ""
+"Hitzewellen, Dürren und Überschwemmungen sind schon heute spürbar. Jedes "
+"weitere Zehntelgrad macht sie schlimmer."
+msgstr ""
+"Heat waves, droughts and floods are already noticeable today. Every further "
+"tenth of a degree makes them worse."
+
+#: pages/templates/facts.html:880
+msgid "Quelle: WMO, State of the Global Climate 2024"
+msgstr "Source: WMO, State of the Global Climate 2024"
+
+#: pages/templates/facts.html:886
+msgid "37 Milliarden Tonnen"
+msgstr "37 billion tonnes"
+
+#: pages/templates/facts.html:890
+msgid "Mrd. t CO₂"
+msgstr "bn t CO₂"
+
+#: pages/templates/facts.html:891
+msgid ""
+"So viel CO₂ setzen wir jedes Jahr durch Kohle, Öl und Gas frei. Über 1.000 "
+"Tonnen pro Sekunde."
+msgstr ""
+"That is how much CO₂ we release every year by burning coal, oil and gas. "
+"Over 1,000 tonnes per second."
+
+#: pages/templates/facts.html:892
+msgid "CO₂, seit du diese Seite geöffnet hast"
+msgstr "of CO₂ since you opened this page"
+
+#: pages/templates/facts.html:894
+msgid "Quelle: Global Carbon Budget 2024"
+msgstr "Source: Global Carbon Budget 2024"
+
+#: pages/templates/facts.html:900
+msgid "3,3 Milliarden Menschen"
+msgstr "3.3 billion people"
+
+#: pages/templates/facts.html:903
+msgid "3,3"
+msgstr "3.3"
+
+#: pages/templates/facts.html:904
+msgid "Mrd. Menschen"
+msgstr "bn people"
+
+#: pages/templates/facts.html:905
+msgid ""
+"Leben in Regionen, die besonders anfällig für die Folgen des Klimawandels "
+"sind. In diesen Gebieten ist die Sterblichkeit durch Überschwemmungen, "
+"Dürren und Stürme 15-mal höher als in schwach betroffenen Regionen."
+msgstr ""
+"live in regions that are especially vulnerable to the effects of climate "
+"change. In these areas, mortality from floods, droughts and storms is 15 "
+"times higher than in regions that are little affected."
+
+#: pages/templates/facts.html:909
+msgid "Etwa 4 von 10 Menschen weltweit."
+msgstr "About 4 in 10 people worldwide."
+
+#: pages/templates/facts.html:910
+msgid "Quelle: IPCC Synthesebericht 2023 (3,3 bis 3,6 Milliarden Menschen)"
+msgstr "Source: IPCC Synthesis Report 2023 (3.3 to 3.6 billion people)"
+
+#: pages/templates/facts.html:916
+msgid "19 Hitzetage"
+msgstr "19 hot days"
+
+#: pages/templates/facts.html:918 pages/templates/facts.html:931
+msgid "Folgen: Hitze"
+msgstr "Consequences: heat"
+
+#: pages/templates/facts.html:920
+msgid "Tage pro Jahr"
+msgstr "days per year"
+
+#: pages/templates/facts.html:921
+msgid ""
+"So viele lebensbedrohliche Hitzetage erlebte ein Mensch zwischen 2020 und "
+"2024 im Schnitt pro Jahr."
+msgstr ""
+"That is how many life-threatening hot days a person experienced per year on "
+"average between 2020 and 2024."
+
+#: pages/templates/facts.html:922
+msgid ""
+"16 davon wären ohne den menschengemachten Klimawandel nicht zu erwarten "
+"gewesen."
+msgstr ""
+"16 of them would not have been expected without human-caused climate change."
+
+#: pages/templates/facts.html:923 pages/templates/facts.html:974
+msgid "Quelle: Lancet Countdown on Health and Climate Change"
+msgstr "Source: Lancet Countdown on Health and Climate Change"
+
+#: pages/templates/facts.html:929
+msgid "13,9-mal wahrscheinlicher"
+msgstr "13.9 times more likely"
+
+#: pages/templates/facts.html:932
+msgid "13,9"
+msgstr "13.9"
+
+#: pages/templates/facts.html:933
+msgid "mal wahrscheinlicher"
+msgstr "times more likely"
+
+#: pages/templates/facts.html:934
+msgid ""
+"Ein Hitzeereignis, das ohne menschlichen Einfluss alle 50 Jahre aufträte, "
+"ist bei 2,7 °C Erwärmung fast 14-mal wahrscheinlicher."
+msgstr ""
+"A heat event that would occur once every 50 years without human influence is"
+" almost 14 times more likely at 2.7 °C of warming."
+
+#: pages/templates/facts.html:935
+msgid ""
+"Schon bei den heutigen 1,2 °C ist es 4,8-mal wahrscheinlicher, bei 2,0 °C "
+"8,6-mal."
+msgstr ""
+"Even at today's 1.2 °C it is 4.8 times more likely, and at 2.0 °C 8.6 times."
+
+#: pages/templates/facts.html:936
+msgid "Quelle: IPCC, Sechster Sachstandsbericht, Arbeitsgruppe I (2021)"
+msgstr "Source: IPCC, Sixth Assessment Report, Working Group I (2021)"
+
+#: pages/templates/facts.html:942
+msgid "546.000 Hitzetote"
+msgstr "546,000 heat deaths"
+
+#: pages/templates/facts.html:944 pages/templates/facts.html:957
+msgid "Folgen: Sterblichkeit"
+msgstr "Consequences: mortality"
+
+#: pages/templates/facts.html:945
+msgid "546.000"
+msgstr "546,000"
+
+#: pages/templates/facts.html:946
+msgid "Todesfälle pro Jahr"
+msgstr "deaths per year"
+
+#: pages/templates/facts.html:947
+#, python-format
+msgid ""
+"So viele Menschen sterben im Schnitt jährlich an den Folgen von Hitze. Seit "
+"1990 ist die Zahl um 63 %% gestiegen."
+msgstr ""
+"That is how many people die from the effects of heat each year on average. "
+"Since 1990, the number has risen by 63%%."
+
+#: pages/templates/facts.html:948
+#, python-format
+msgid "Etwa 37 %% dieser Todesfälle sind dem Klimawandel zuzurechnen."
+msgstr "About 37%% of these deaths can be attributed to climate change."
+
+#: pages/templates/facts.html:949
+msgid ""
+"Quellen: Lancet Countdown on Health and Climate Change, Studie zu "
+"hitzebedingter Sterblichkeit"
+msgstr ""
+"Sources: Lancet Countdown on Health and Climate Change, study on heat-"
+"related mortality"
+
+#: pages/templates/facts.html:955
+msgid "14,5 Millionen Tote bis 2050"
+msgstr "14.5 million deaths by 2050"
+
+#: pages/templates/facts.html:958
+msgid "14,5"
+msgstr "14.5"
+
+#: pages/templates/facts.html:959
+msgid "Mio. Todesfälle"
+msgstr "m deaths"
+
+#: pages/templates/facts.html:960
+msgid ""
+"So viele Todesfälle durch die Folgen des Klimawandels prognostiziert das "
+"Weltwirtschaftsforum für 2050."
+msgstr ""
+"That is how many deaths from the effects of climate change the World "
+"Economic Forum projects for 2050."
+
+#: pages/templates/facts.html:961
+msgid "Quelle: Weltwirtschaftsforum"
+msgstr "Source: World Economic Forum"
+
+#: pages/templates/facts.html:967
+msgid "1,09 Billionen US-Dollar"
+msgstr "1.09 trillion US dollars"
+
+#: pages/templates/facts.html:969 pages/templates/facts.html:982
+msgid "Folgen: Finanzen"
+msgstr "Consequences: finances"
+
+#: pages/templates/facts.html:970
+msgid "1,09"
+msgstr "1.09"
+
+#: pages/templates/facts.html:971
+msgid "Bio. US-Dollar"
+msgstr "trillion US dollars"
+
+#: pages/templates/facts.html:972
+msgid ""
+"Schaden durch Hitze im Jahr 2024: 639 Milliarden verlorene Arbeitsstunden "
+"weltweit."
+msgstr ""
+"in damage caused by heat in 2024: 639 billion lost working hours worldwide."
+
+#: pages/templates/facts.html:973
+msgid ""
+"Dazu kamen 304 Milliarden US-Dollar Schäden durch Extremwetterereignisse, "
+"die durch den Klimawandel häufiger und extremer wurden."
+msgstr ""
+"On top of that came 304 billion US dollars in damage from extreme weather "
+"events, which became more frequent and more extreme because of climate "
+"change."
+
+#: pages/templates/facts.html:980
+msgid "643 Milliarden Euro"
+msgstr "643 billion euros"
+
+#: pages/templates/facts.html:984
+msgid "Mrd. Euro"
+msgstr "bn euros"
+
+#: pages/templates/facts.html:985
+msgid ""
+"Klimakosten verursachte Deutschland allein 2025 durch seine Emissionen von "
+"649 Millionen Tonnen CO₂-Äquivalenten."
+msgstr ""
+"in climate costs were caused by Germany alone in 2025 through its emissions "
+"of 649 million tonnes of CO₂ equivalents."
+
+#: pages/templates/facts.html:986
+msgid ""
+"Das Umweltbundesamt beziffert eine Tonne CO₂ auf rund 1.000 Euro "
+"Klimakosten, mit steigender Tendenz. Getragen werden sie zu einem großen "
+"Teil von künftigen Generationen."
+msgstr ""
+"The German Environment Agency puts the climate costs of one tonne of CO₂ at "
+"around 1,000 euros, and rising. A large part of them will be borne by future"
+" generations."
+
+#: pages/templates/facts.html:987
+msgid "Quellen: Umweltbundesamt (Klimakosten, CO₂-Ausstoß 2025)"
+msgstr ""
+"Sources: German Environment Agency (climate costs, CO₂ emissions 2025)"
+
+#: pages/templates/facts.html:993
+msgid "Ungerechte Verteilung"
+msgstr "Unfair distribution"
+
+#: pages/templates/facts.html:995
+msgid "Folgen: Gerechtigkeit"
+msgstr "Consequences: justice"
+
+#: pages/templates/facts.html:997
+#, python-format
+msgid "%% der Emissionen"
+msgstr "%% of emissions"
+
+#: pages/templates/facts.html:998
+#, python-format
+msgid ""
+"verursachen die reichsten 10 %% der Weltbevölkerung. Die ärmere Hälfte kommt"
+" auf nur rund 12 %%."
+msgstr ""
+"are caused by the richest 10%% of the world's population. The poorer half "
+"accounts for only about 12%%."
+
+#: pages/templates/facts.html:1001
+#, python-format
+msgid "Reichste 10 %%"
+msgstr "Richest 10%%"
+
+#: pages/templates/facts.html:1001
+msgid "28,7 t CO₂e pro Kopf"
+msgstr "28.7 t CO₂e per person"
+
+#: pages/templates/facts.html:1005
+msgid "Ärmere Hälfte"
+msgstr "Poorer half"
+
+#: pages/templates/facts.html:1005
+msgid "1,4 t CO₂e pro Kopf"
+msgstr "1.4 t CO₂e per person"
+
+#: pages/templates/facts.html:1009
+msgid ""
+"Gleichzeitig trifft der Klimawandel ärmere Menschen besonders stark, während"
+" sich reiche Menschen besser schützen können."
+msgstr ""
+"At the same time, climate change hits poorer people especially hard, while "
+"wealthy people can protect themselves better."
+
+#: pages/templates/facts.html:1010
+msgid ""
+"Quellen: Carbon Inequality (Zahlen für 2019), Studie zu ungleicher "
+"Klimaerhitzung"
+msgstr ""
+"Sources: Carbon Inequality (figures for 2019), study on unequal climate "
+"heating"
+
+#: pages/templates/facts.html:1016
+msgid "Bewaffnete Konflikte"
+msgstr "Armed conflicts"
+
+#: pages/templates/facts.html:1018
+msgid "Folgen: Konflikte"
+msgstr "Consequences: conflicts"
+
+#: pages/templates/facts.html:1020
+msgid ""
+"des Konfliktrisikos des vergangenen Jahrhunderts wurden Schätzungen zufolge "
+"vom Klima beeinflusst."
+msgstr ""
+"of the conflict risk of the past century was influenced by climate, "
+"according to estimates."
+
+#: pages/templates/facts.html:1023
+msgid "Bei 2 °C Erwärmung"
+msgstr "At 2 °C of warming"
+
+#: pages/templates/facts.html:1027
+msgid "Bei 4 °C Erwärmung"
+msgstr "At 4 °C of warming"
+
+#: pages/templates/facts.html:1031
+msgid ""
+"Quelle: Studie zu bewaffneten Konflikten und Klima (Erwärmung im Vergleich "
+"zum vorindustriellen Niveau)"
+msgstr ""
+"Source: study on armed conflicts and climate (warming relative to pre-"
+"industrial levels)"
+
+#: pages/templates/facts.html:1037
+msgid "Artenvielfalt"
+msgstr "Biodiversity"
+
+#: pages/templates/facts.html:1039
+msgid "Folgen: Artenvielfalt"
+msgstr "Consequences: biodiversity"
+
+#: pages/templates/facts.html:1041
+#, python-format
+msgid "%% aller Arten"
+msgstr "%% of all species"
+
+#: pages/templates/facts.html:1042
+msgid ""
+"der Tier- und Pflanzenarten würden aussterben, wenn die CO₂-Emissionen wie "
+"bisher weitergehen."
+msgstr ""
+"of animal and plant species would go extinct if CO₂ emissions continue as "
+"they have so far."
+
+#: pages/templates/facts.html:1045
+msgid "Weiter wie bisher"
+msgstr "Business as usual"
+
+#: pages/templates/facts.html:1049
+msgid "2-°C-Ziel erreicht"
+msgstr "2 °C target met"
+
+#: pages/templates/facts.html:1053
+msgid "Quelle: Studie zu Klimawandel und Artenvielfalt"
+msgstr "Source: study on climate change and biodiversity"
+
+#: pages/templates/facts.html:1059 pages/templates/facts.html:1061
+msgid "Und jetzt?"
+msgstr "So what now?"
+
+#: pages/templates/facts.html:1062
+msgid "Du kannst etwas ändern."
+msgstr "You can make a difference."
+
+#: pages/templates/facts.html:1063
+msgid ""
+"Jede eingesparte Tonne CO₂ zählt. Mit ClimateQuest machst du daraus ein "
+"Spiel."
+msgstr ""
+"Every tonne of CO₂ you save counts. With ClimateQuest, you turn it into a "
+"game."
 
 #: pages/templates/mobile_apps.html:7
 msgid "Lade dir die mobilen App von ClimateQuest herunter"
