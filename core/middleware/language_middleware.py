@@ -103,5 +103,14 @@ def parse_accept_language_entry(part: str) -> tuple[str, float] | None:
     if match is None:
         return None
     language_code = match.group(1).lower()
-    quality = float(match.group(2)) if match.group(2) else 1.0
-    return language_code, quality
+    return language_code, parse_quality(match.group(2))
+
+
+def parse_quality(raw_quality: str | None) -> float:
+    """``q`` value of an ``Accept-Language`` entry; a malformed value ranks the language last."""
+    if raw_quality is None:
+        return 1.0
+    try:
+        return float(raw_quality)
+    except ValueError:
+        return 0.0

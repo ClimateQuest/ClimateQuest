@@ -5,6 +5,7 @@ from unittest import mock
 import pytest
 from django.core import mail
 from django.test import RequestFactory
+from django.urls import reverse
 from django.utils import timezone
 
 from aktionen.models import Aktion
@@ -391,9 +392,7 @@ def test_create_notification_german_and_english(make_user):
     with mock.patch("utils.functions.send_push", return_value=200) as push:
         fn.create_notification(request, "deutsch <span>x</span>", "english <span>x</span>", user=de_user)
         fn.create_notification(request, "deutsch", "english", user=en_user, url="/somewhere/")
-    assert Benachrichtigung.objects.get(user=de_user).url == "/de/dashboard/" or Benachrichtigung.objects.get(
-        user=de_user
-    ).url.endswith("/dashboard/")
+    assert Benachrichtigung.objects.get(user=de_user).url == reverse("dashboard")
     assert Benachrichtigung.objects.get(user=en_user).url == "/somewhere/"
     assert push.call_args_list[0].kwargs["benachrichtigung"] == "deutsch "
     assert push.call_args_list[0].kwargs["head"] == "Neue Benachrichtigung"

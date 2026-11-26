@@ -1,5 +1,4 @@
 import datetime
-from unittest import mock
 
 import pytest
 from django.core import mail
@@ -14,10 +13,7 @@ from tests.conftest import flash
 TODAY = timezone.localdate
 
 
-@pytest.fixture(autouse=True)
-def no_push():
-    with mock.patch("utils.functions.send_push", return_value=200):
-        yield
+pytestmark = pytest.mark.usefixtures("no_push")
 
 
 # ---- access control -------------------------------------------------------------------------
@@ -38,7 +34,6 @@ def test_private_user_data_is_blocked(logged_in, make_user):
     for url in ("level", "history", "klimapunkte"):
         response = logged_in.get(f"/users/{url}/{private.id}/")
         assert response.status_code == 302
-    assert all_messages["user_blocked_view"] in [m for m in map(str, flash(response))] or True
     assert str(all_messages["user_blocked_view"]) in flash(response)
 
 
@@ -181,13 +176,6 @@ def test_report_user(logged_in, user, other, staff):
     assert "&lt;script&gt;" in html
 
 
-def test_report_user_escapes_reason(logged_in, user, other, make_user):
-    admin = make_user("admin", is_staff=True, is_superuser=True, email="a@x.de", mail_verified=True)
-    logged_in.post(f"/users/detail/{other.id}/", {"reason": "<b>x</b>"})
-    assert "<b>x</b>" not in mail.outbox[0].body or "&lt;b&gt;" in mail.outbox[0].body
-    assert admin
-
-
 def test_report_without_admin_still_stores_report(logged_in, other):
     logged_in.post(f"/users/detail/{other.id}/", {"reason": "spam"})
     assert ReportedUser.objects.count() == 1
@@ -224,9 +212,10 @@ def test_action_detail_view(logged_in, user, action_type, make_aktion, other):
     aktion = make_aktion(user, action_type, 1)
     assert logged_in.get(f"/users/action_detail/{aktion.id}/{user.id}/").status_code == 200
     missing = logged_in.get(f"/users/action_detail/9999/{user.id}/")
-    assert missing.url == f"/users/history/{user.id}/" or missing.status_code == 302
-    blocked = logged_in.get(f"/users/action_detail/{aktion.id}/{other.id}/")
-    assert blocked.status_code == 302
+    assert missing.url == "/users/history/me/"
+    assert flash(missing)[-1] == str(all_messages["action_not_found"])
+    foreign = logged_in.get(f"/users/action_detail/{aktion.id}/{other.id}/")  # visible user, but not their action
+    assert foreign.url == "/users/history/me/"
 
 
 def test_cannot_edit_foreign_action(logged_in, other, action_type, make_aktion):

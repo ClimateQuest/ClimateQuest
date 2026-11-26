@@ -1,4 +1,6 @@
 import itertools
+from collections.abc import Iterator
+from unittest import mock
 
 import pytest
 from django.conf import settings
@@ -29,6 +31,26 @@ def clear_cache():
     cache.clear()
     yield
     cache.clear()
+
+
+@pytest.fixture(autouse=True)
+def isolated_logs(settings, tmp_path_factory: pytest.TempPathFactory) -> None:
+    """Error logs written during a test must not end up in the project's ``logs`` folder."""
+    settings.LOGS_DIR = tmp_path_factory.mktemp("logs")
+
+
+@pytest.fixture
+def no_push() -> Iterator[mock.MagicMock]:
+    """Replace the web push of notifications; request it with ``pytest.mark.usefixtures``."""
+    with mock.patch("utils.functions.send_push", return_value=200) as push:
+        yield push
+
+
+@pytest.fixture
+def smtp_down() -> Iterator[None]:
+    """Every outgoing mail fails like an unreachable SMTP server."""
+    with mock.patch("utils.functions.EmailMultiAlternatives.send", side_effect=OSError("smtp down")):
+        yield
 
 
 class LangClient(Client):

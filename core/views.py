@@ -6,6 +6,7 @@ from django.test import RequestFactory
 from django.urls import reverse
 
 from utils.functions import create_internal_error, create_notification, get_weekly_goal_from_user
+from utils.groups import escaped
 
 logger = logging.getLogger(__name__)
 
@@ -51,8 +52,8 @@ def create_reminder():
                 continue
             create_notification(
                 request,
-                notification_de=f"Hey {user.username}, du hast dein wöchentliches Ziel noch nicht erreicht! Trage jetzt noch eine Aktion ein, die du durchgeführt hast, und erreiche nicht nur dein Ziel, sondern verlängere auch deine Streak!",
-                notification_en=f"Hey {user.username}, you haven't reached your weekly goal yet! Add an action you have done now and not only reach your goal but also extend your streak!",
+                notification_de=f"Hey {escaped(user.username)}, du hast dein wöchentliches Ziel noch nicht erreicht! Trage jetzt noch eine Aktion ein, die du durchgeführt hast, und erreiche nicht nur dein Ziel, sondern verlängere auch deine Streak!",
+                notification_en=f"Hey {escaped(user.username)}, you haven't reached your weekly goal yet! Add an action you have done now and not only reach your goal but also extend your streak!",
                 user=user,
                 url=reverse("dashboard"),
             )

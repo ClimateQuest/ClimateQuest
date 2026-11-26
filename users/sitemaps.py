@@ -28,7 +28,7 @@ class LevelViewSitemap(Sitemap):
         return obj.last_login
 
     def location(self, obj):
-        return reverse("klimapunkte_view", args=[obj.pk])
+        return reverse("level_view", args=[obj.pk])
 
 
 class HistorySitemap(Sitemap):

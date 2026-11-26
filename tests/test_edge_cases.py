@@ -19,11 +19,7 @@ from tests.conftest import flash
 from tests.test_utils_functions import make_request
 from utils import functions as fn
 
-
-@pytest.fixture(autouse=True)
-def no_push():
-    with mock.patch("utils.functions.send_push", return_value=200):
-        yield
+pytestmark = pytest.mark.usefixtures("no_push")
 
 
 def test_all_sitemaps_with_data(db, user, worldwide, client):

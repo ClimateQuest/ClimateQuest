@@ -140,6 +140,9 @@ def _change_name(request, family):
     if Family.objects.filter(name=name).exists():
         messages.error(request, all_messages["family_exists"])
         return None
+    if name == WORLDWIDE_RANKING_NAME:
+        messages.error(request, all_messages["family_name_forbidden"])
+        return None
     if not require_admin_password(request, admin_password, family.admin_password, name):
         return None
     old_name = family.name

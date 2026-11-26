@@ -10,6 +10,7 @@ from django.utils import timezone
 
 from core.all_messages import all_messages
 from utils.functions import clean_html, create_notification, parse_id
+from utils.groups import escaped
 
 from .models import Answer, Event, Question
 
@@ -208,8 +209,8 @@ def edit_event(request, event_id):
             _notify_participants(
                 request,
                 event,
-                f"Ein Event, bei dem du Teilnehmer bist und das jetzt {event.name} heißt, wurde bearbeitet.",
-                f"An event you are participating in and that is now called {event.name} has been edited.",
+                f"Ein Event, bei dem du Teilnehmer bist und das jetzt {escaped(event.name)} heißt, wurde bearbeitet.",
+                f"An event you are participating in and that is now called {escaped(event.name)} has been edited.",
                 reverse("event_detail", args=[event_id]),
             )
             messages.success(request, all_messages["successfully_edited_event"])
@@ -218,8 +219,8 @@ def edit_event(request, event_id):
             _notify_participants(
                 request,
                 event,
-                f"Das Event {event.name}, bei dem du Teilnehmer bist, wurde gelöscht",
-                f"The event called {event.name} has been deleted.",
+                f"Das Event {escaped(event.name)}, bei dem du Teilnehmer bist, wurde gelöscht",
+                f"The event called {escaped(event.name)} has been deleted.",
                 reverse("events_overview"),
             )
             event.delete()

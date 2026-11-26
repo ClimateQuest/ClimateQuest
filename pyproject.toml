@@ -20,6 +20,8 @@ omit = [
 ]
 
 [tool.coverage.report]
+# Also report never imported files in folders without an __init__.py, so that untested code cannot stay invisible.
+include_namespace_packages = true
 show_missing = true
 skip_covered = true
 exclude_also = ["if __name__ == .__main__.:"]

@@ -143,6 +143,13 @@ Alle Tests inklusive 100 % Coverage auf SQLite **und** PostgreSQL ausführen:
 make test
 ```
 
+Schneller Gesamtcheck mit einem Befehl (fehlende Migrationen, alle Tests, 100 % Coverage), standardmäßig auf SQLite,
+mit `TEST_DB=postgres` auf PostgreSQL:
+
+```bash
+bash scripts/test_coverage.sh
+```
+
 Für PostgreSQL werden `PGHOST`, `PGPORT`, `PGUSER`, `PGPASSWORD` (und optional `PGDATABASE`) gelesen; der Benutzer
 braucht das Recht, die Test-Datenbank anzulegen. Nur eine Datenbank testen: `make test-sqlite` bzw. `make test-postgres`. Zuvor ausführen: `export PGHOST=localhost PGUSER=tester PGPASSWORD=testpw123 PGDATABASE=postgres`!
 

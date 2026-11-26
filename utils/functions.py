@@ -39,6 +39,17 @@ PASSWORD_LENGTH = 12
 PASSWORD_ALPHABET = string.ascii_letters + string.digits + string.punctuation.replace('"', "").replace("'", "")
 APNS_TIMEOUT_SECONDS = 10
 PUSH_TTL_SECONDS = 1000
+# Request headers that carry credentials or the client's IP address and therefore must never be logged.
+UNLOGGED_HEADERS = frozenset(
+    {
+        "HTTP_AUTHORIZATION",
+        "HTTP_COOKIE",
+        "HTTP_PROXY_AUTHORIZATION",
+        "HTTP_X_CSRFTOKEN",
+        "HTTP_X_FORWARDED_FOR",
+        "HTTP_X_REAL_IP",
+    }
+)
 
 logger = logging.getLogger(__name__)
 
@@ -357,6 +368,8 @@ def parse_id(raw):
 
 
 def ist_email_gueltig(email):
+    if len(email) > User._meta.get_field("email").max_length:
+        return False
     try:
         validate_email(email)
     except ValidationError:
@@ -390,7 +403,7 @@ def create_internal_error(request, beschreibung, fehlermeldung="interner Fehler"
                 "COOKIES": dict.fromkeys(request.COOKIES, "***"),
                 "FILES": {k: f.name for k, f in request.FILES.items()},
                 # Only HTTP headers, no IP address or other sensitive fields
-                "META": {k: v for k, v in request.META.items() if k.startswith("HTTP_")},
+                "META": {k: v for k, v in request.META.items() if k.startswith("HTTP_") and k not in UNLOGGED_HEADERS},
             }
         )
 
@@ -417,8 +430,13 @@ def create_notification(request, notification_de, notification_en, user=None, ur
     is_german = user.usererweitert.lang == "de"
     head = "Neue Benachrichtigung" if is_german else "New notification"
 
+    # PostgreSQL rejects values longer than the column, so only the stored copy is shortened.
+    max_length = Benachrichtigung._meta.get_field("benachrichtigung_de").max_length
     benachrichtigung = Benachrichtigung.objects.create(
-        benachrichtigung_de=notification_de, benachrichtigung_en=notification_en, user=user, url=url
+        benachrichtigung_de=notification_de[:max_length],
+        benachrichtigung_en=notification_en[:max_length],
+        user=user,
+        url=url,
     )
     send_mail_function(
         request=request,

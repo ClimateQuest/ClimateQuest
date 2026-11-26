@@ -63,10 +63,10 @@ def _toggle_weekly_tracking(request):
 def _track_kilometers(request):
     """AJAX endpoint of the distance tracker: records the driven distance (in meters) as an action."""
     try:
-        distance = int(request.POST.get("distance"))
-    except (TypeError, ValueError):
-        distance = 0
-    if distance <= 0:
+        kilometers = int(request.POST.get("distance")) / METERS_PER_KILOMETER
+    except (TypeError, ValueError, OverflowError):
+        kilometers = 0
+    if kilometers <= 0:
         messages.error(request, all_messages["internal_error"])
         return redirect("track_actions")
 
@@ -80,7 +80,7 @@ def _track_kilometers(request):
     aktion = Aktion.objects.create(
         aktion=action_type,
         user=request.user,
-        quantity=distance / METERS_PER_KILOMETER,
+        quantity=kilometers,
         date=timezone.localdate(),
         description=TRACKING_DESCRIPTION_DE if request.user.usererweitert.lang == "de" else TRACKING_DESCRIPTION_EN,
     )

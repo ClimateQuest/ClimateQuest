@@ -1,5 +1,4 @@
 import datetime
-from unittest import mock
 
 import pytest
 from django.contrib.auth.hashers import check_password
@@ -19,10 +18,7 @@ def msg(key, **format_args):
     return text.format(**format_args) if format_args else text
 
 
-@pytest.fixture(autouse=True)
-def no_push():
-    with mock.patch("utils.functions.send_push", return_value=200):
-        yield
+pytestmark = pytest.mark.usefixtures("no_push")
 
 
 @pytest.fixture
@@ -209,7 +205,8 @@ def test_family_detail_invalid_period_and_empty_family(logged_in, family):
 
 
 def test_family_detail_access_rules(client, make_user, family, community, db):
-    assert flash(client.get(f"/family/family/{family.id}/")) or True
+    anonymous = client.get(f"/family/family/{family.id}/")
+    assert anonymous.status_code == 302 and anonymous.url.startswith("/personals/login/")
     outsider = make_user("outsider")
     client.force_login(outsider)
     response = client.get(f"/family/family/{family.id}/")

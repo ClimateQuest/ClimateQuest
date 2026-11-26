@@ -1,37 +1,26 @@
 """Middleware, error pages, sitemaps, admin, template tags, management commands and cron entry points."""
 
-import datetime
-import json
 import logging
 from io import StringIO
-from unittest import mock
 
 import pytest
 from django.contrib import admin
 from django.contrib.auth.models import User
-from django.core import mail
 from django.core.management import call_command
 from django.core.management.base import CommandError
 from django.template import Context, Template
 from django.test import RequestFactory
 from django.utils import timezone
 
-from aktionen.models import Aktion
 from core.middleware import language_middleware as lm
 from core.middleware.add_cors_header_middleware import AddCORSHeaderMiddleware
 from core.views import create_reminder
-from family.models import Family
 from hall_of_fame.models import HallOfFameData, HallOfFameEntry
 from hall_of_fame.views import add_to_hall_of_fame_cron
 from home.models import Benachrichtigung
 from personals.models import TreeCodes, UserErweitert
-from tests.conftest import flash
 
-
-@pytest.fixture(autouse=True)
-def no_push():
-    with mock.patch("utils.functions.send_push", return_value=200):
-        yield
+pytestmark = pytest.mark.usefixtures("no_push")
 
 
 # ---- language middleware --------------------------------------------------------------------------
@@ -117,8 +106,7 @@ def test_csp_nonces_differ_per_request(client, db, worldwide):
 # ---- error pages -------------------------------------------------------------------------------------
 
 
-def test_error_pages(client, db, settings, tmp_path):
-    settings.LOGS_DIR = tmp_path
+def test_error_pages(client, db, settings):
     assert client.get("/does/not/exist/").status_code == 404
     from core import views
 
@@ -128,16 +116,21 @@ def test_error_pages(client, db, settings, tmp_path):
     from django.contrib.messages.storage.fallback import FallbackStorage
 
     request._messages = FallbackStorage(request)
-    for view, status in [
-        (views.custom_400, 400),
-        (views.custom_403, 403),
-        (views.csrf_error, 500),
-        (views.custom_404, 404),
-        (views.custom_500, 500),
-        (views.custom_503, 503),
+    log_file = settings.LOGS_DIR / "errors.log"
+    for view, status, logged in [
+        (views.custom_400, 400, "400 Error: why"),
+        (views.custom_403, 403, "403 Error: why"),
+        (views.csrf_error, 500, "CSRF Error: why"),
+        (views.custom_404, 404, None),
+        (views.custom_500, 500, None),
+        (views.custom_503, 503, "Dienst nicht verfügbar (503): why"),
     ]:
-        assert view(request).status_code == status
-    assert (tmp_path / "errors.log").exists() or True
+        log_file.unlink(missing_ok=True)
+        assert view(request, "why").status_code == status
+        if logged is None:
+            assert not log_file.exists(), view.__name__
+        else:
+            assert logged in log_file.read_text(encoding="utf-8")
 
 
 def test_csrf_failure_renders_error_page(db, worldwide, settings, tmp_path):
@@ -167,11 +160,6 @@ def test_sitemap(client, db, user, worldwide):
     assert b"<urlset" in response.content or b"<sitemapindex" in response.content
 
 
-@pytest.mark.parametrize("name", ["home", "support", "feedback", "nutzungsbedingungen"])
-def test_sitemap_sections(client, db, name):
-    assert client.get(f"/sitemap-{name}.xml").status_code in (200, 404)
-
-
 def test_all_sitemap_classes_produce_localized_urls(db, user, worldwide):
     from django.utils import translation
 
@@ -181,11 +169,6 @@ def test_all_sitemap_classes_produce_localized_urls(db, user, worldwide):
     for sitemap in sitemaps.values():
         for item in sitemap.items():
             assert sitemap.location(item).startswith("/de/")
-    from artikel.models import Artikel, Category
-
-    category = Category.objects.create(title="c")
-    Artikel.objects.create(name_de="a", name_en="a", content_de="c", content_en="c", creator=user, category=category)
-    assert sitemaps["artikel_detail"].lastmod(Artikel.objects.get()) is not None or True
 
 
 def test_pages(client, db):
@@ -381,7 +364,6 @@ def test_hall_of_fame_cron_runs_all_steps(make_user, action_type, category, worl
     biker = make_user("biker")
     today = timezone.localdate()
     make_aktion(winner, action_type, 30, date=today)  # 60 points, top of the ranking
-    action_type.id  # noqa: B018
     Artikel.objects.create(
         name_de="a",
         name_en="a",
@@ -449,7 +431,7 @@ def test_hall_of_fame_page(client, user, other, db):
     assert response.context["in_hall_of_fame"] is False
     client.force_login(user)
     assert client.get("/hall_of_fame/hall_of_fame/").context["in_hall_of_fame"] is True
-    assert str(HallOfFameEntry.objects.first()) == "alice --> a"
+    assert str(HallOfFameEntry.objects.earliest("id")) == "alice --> a"
 
 
 def test_hall_of_fame_page_query_count(client, make_user, django_assert_max_num_queries):
@@ -507,4 +489,3 @@ def test_add_company_command_errors(worldwide, tmp_path):
     with pytest.raises(ValueError, match="Duplicate member names found: a"):
         call_command("add_company_without_user_family_relationship", str(source))
     assert not User.objects.filter(username="a").exists()
-    assert json and datetime and mail and Aktion and Family and flash

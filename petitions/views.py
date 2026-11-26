@@ -6,6 +6,7 @@ from django.urls import reverse
 
 from core.all_messages import all_messages
 from utils.functions import check_is_truth, clean_html, create_notification, parse_id
+from utils.groups import escaped, too_long
 
 from .models import Answer, Category, Comment, Petition, Update
 
@@ -40,6 +41,8 @@ def add_petition(request):
         fields = {name: post.get(name) or "" for name in ("title_de", "title_en", "content_de", "content_en", "goal")}
         if not all(fields.values()):
             messages.error(request, all_messages["missing_required_inputs"])
+            return redirect("add_petition")
+        if too_long(request, fields["title_de"], fields["title_en"]):
             return redirect("add_petition")
         goal = read_goal(request, fields["goal"])
         if goal is None:
@@ -129,6 +132,8 @@ def _add_update(request, petition):
     if not all(values.values()):
         messages.error(request, all_messages["missing_required_inputs"])
         return "edit_petition"
+    if too_long(request, values["title_de"], values["title_en"]):
+        return "edit_petition"
     petition.updates.add(
         Update.objects.create(
             title_de=values["title_de"],
@@ -140,8 +145,8 @@ def _add_update(request, petition):
     _notify_signers(
         request,
         petition,
-        f"Der Petition {petition.title}, die du unterschrieben hast, wurde ein Update hinzugefügt!",
-        f"A new update has been added to the petition {petition.title}, which you signed!",
+        f"Der Petition {escaped(petition.title)}, die du unterschrieben hast, wurde ein Update hinzugefügt!",
+        f"A new update has been added to the petition {escaped(petition.title)}, which you signed!",
     )
     return "petition_detail"
 
@@ -167,16 +172,16 @@ def _toggle_success(request, petition):
         _notify_signers(
             request,
             petition,
-            f"Die Petition {petition.title}, die du unterschrieben hast, war erfolgreich!",
-            f"The petition {petition.title}, which you signed, was successful!",
+            f"Die Petition {escaped(petition.title)}, die du unterschrieben hast, war erfolgreich!",
+            f"The petition {escaped(petition.title)}, which you signed, was successful!",
         )
     else:
         messages.error(request, all_messages["removed_success"])
         _notify_signers(
             request,
             petition,
-            f"Von der Petition {petition.title}, die du unterschrieben hast, wurde der Erfolg gelöscht!",
-            f"The success of the petition {petition.title}, which you signed, was removed!",
+            f"Von der Petition {escaped(petition.title)}, die du unterschrieben hast, wurde der Erfolg gelöscht!",
+            f"The success of the petition {escaped(petition.title)}, which you signed, was removed!",
         )
     return "petition_detail"
 

@@ -184,8 +184,12 @@ def _toggle_blocked(request, artikel):
         artikel.blocked = False
         messages.success(request, all_messages["successfully_unblocked_article"])
     else:
+        block_message = request.POST.get("block_msg") or DEFAULT_BLOCK_MESSAGE
+        if len(block_message) > Artikel._meta.get_field("msg_if_wrong").max_length:
+            messages.error(request, all_messages["too_long_input"])
+            return
         artikel.verified = False
-        artikel.msg_if_wrong = request.POST.get("block_msg") or DEFAULT_BLOCK_MESSAGE
+        artikel.msg_if_wrong = block_message
         artikel.blocked = True
         messages.success(request, all_messages["successfully_blocked_article"])
     artikel.save()

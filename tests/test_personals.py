@@ -1,4 +1,5 @@
 import datetime
+import html
 import json
 from unittest import mock
 
@@ -12,7 +13,6 @@ from django.utils import timezone
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 
-from aktionen.models import Aktion
 from community.models import Community
 from core.all_messages import all_messages
 from family.models import Family
@@ -32,10 +32,7 @@ def social_apps(db):
     app.sites.add(Site.objects.get_current())
 
 
-@pytest.fixture(autouse=True)
-def no_push():
-    with mock.patch("utils.functions.send_push", return_value=200):
-        yield
+pytestmark = pytest.mark.usefixtures("no_push")
 
 
 def msg(key):
@@ -131,7 +128,7 @@ def test_register_with_email_sends_activation_mail(en_client, worldwide, recaptc
     assert (user.usererweitert.mail_verified, user.usererweitert.lang) == (False, "en")
     assert len(mail.outbox) == 1
     assert "/personals/activate/" in mail.outbox[0].body
-    assert "Please click" in mail.outbox[0].body or "Bitte klick" in mail.outbox[0].body
+    assert "Please click" in mail.outbox[0].body
 
 
 def test_register_activation_mail_text_is_interpolated_after_translation(client, worldwide, recaptcha_ok):
@@ -305,6 +302,7 @@ def test_change_email(logged_in, user, other):
 def test_change_email_rolls_back_if_mail_fails(logged_in, user):
     user.email = "old@x.de"
     user.save()
+    UserErweitert.objects.filter(user=user).update(mail_verified=True)
     with mock.patch("personals.views.send_mail_function", return_value=False):
         post_settings(logged_in, change_email="1", email="new@x.de")
     user.refresh_from_db()
@@ -415,7 +413,7 @@ def test_reset_password_always_mails_the_new_password(client, make_user, verifie
     assert flash(response) == [msg("password_reset_mail_sent")]
     assert len(mail.outbox) == 1
     target.refresh_from_db()
-    new_password = mail.outbox[0].alternatives[0][0].split("<b>")[1].split("</b>")[0]
+    new_password = html.unescape(mail.outbox[0].alternatives[0][0].split("<b>")[1].split("</b>")[0])
     assert target.check_password(new_password)
 
 
@@ -642,4 +640,3 @@ def test_adapter_populate_and_pre_login(rf, db):
 
 def test_reverse_names_exist():
     assert reverse("statistics_view") == "/personals/statistics/"
-    assert Aktion and Benachrichtigung

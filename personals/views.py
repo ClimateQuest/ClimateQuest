@@ -17,6 +17,7 @@ from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.encoding import force_bytes
+from django.utils.html import escape
 from django.utils.http import url_has_allowed_host_and_scheme, urlsafe_base64_decode, urlsafe_base64_encode
 from django.utils.translation import gettext as _
 from django.views.decorators.csrf import csrf_exempt
@@ -37,6 +38,7 @@ from utils.functions import (
     ist_email_gueltig,
     send_mail_function,
 )
+from utils.groups import escaped
 
 from .models import IOSDevice
 from .tokens import email_verification_token
@@ -54,7 +56,6 @@ STATISTICS_MAX_DAYS = 3650
 STATISTICS_DAY_OPTIONS = [7, 30, 365]
 ACTIVATION_MAIL_SUBJECT = "ClimateQuest - dein Aktivierungslink ist da!"
 USERNAME_MAX_LENGTH = User._meta.get_field("username").max_length
-MAX_DEVICE_FIELD_LENGTH = 200
 
 
 def generate_verification_link(request):
@@ -258,6 +259,7 @@ def _change_email(request):
         return
 
     old_email = request.user.email
+    was_verified = UserErweitert.objects.get(user=request.user).mail_verified
     request.user.email = email
     request.user.save()
     UserErweitert.objects.filter(user=request.user).update(mail_verified=False)
@@ -267,7 +269,7 @@ def _change_email(request):
     else:
         request.user.email = old_email
         request.user.save()
-        UserErweitert.objects.filter(user=request.user).update(mail_verified=True)
+        UserErweitert.objects.filter(user=request.user).update(mail_verified=was_verified)
 
 
 def _change_weekly_goal(request):
@@ -317,18 +319,18 @@ def _delete_account(request):
     for member in family_members:
         create_notification(
             request,
-            f"User {user.username}, mit dem / der du zusammen in einer Family warst, hat den eigenen Account "
-            f"gelöscht. Von {user.username} gesendete Nachrichten werden auch gelöscht.",
-            f"User {user.username}, who you were in a family with, has deleted their account. "
+            f"User {escaped(user.username)}, mit dem / der du zusammen in einer Family warst, hat den eigenen Account "
+            f"gelöscht. Von {escaped(user.username)} gesendete Nachrichten werden auch gelöscht.",
+            f"User {escaped(user.username)}, who you were in a family with, has deleted their account. "
             "Their messages will also be deleted.",
             member,
         )
     for member in community_members:
         create_notification(
             request,
-            f"User {user.username}, mit dem / der du zusammen in einer Community warst, hat den eigenen Account "
-            f"gelöscht. Von {user.username} gesendete Nachrichten werden auch gelöscht.",
-            f"User {user.username}, who you were in a community with, has deleted their account. "
+            f"User {escaped(user.username)}, mit dem / der du zusammen in einer Community warst, hat den eigenen "
+            f"Account gelöscht. Von {escaped(user.username)} gesendete Nachrichten werden auch gelöscht.",
+            f"User {escaped(user.username)}, who you were in a community with, has deleted their account. "
             "Their messages will also be deleted.",
             member,
         )
@@ -407,7 +409,7 @@ def reset_password(request):
             '<a href="https://climate-quest.de/personals/login/">hier</a> an und ändere aus Sicherheitsgründen '
             'möglichst bald unter "Profil bearbeiten" dein Passwort.'
         )
-        % {"new_password": new_password, "username": user.username},
+        % {"new_password": escape(new_password), "username": escape(user.username)},
         recipient_list=user.email,
         mailinglist_needless=True,
         user=user,
@@ -485,6 +487,10 @@ def credit_view(request):
     )
 
 
+def _fits_device_column(field, value):
+    return isinstance(value, str) and len(value) <= IOSDevice._meta.get_field(field).max_length
+
+
 @csrf_exempt
 def register_ios_device(request):
     if request.method != "POST":
@@ -500,8 +506,8 @@ def register_ios_device(request):
 
     if not user_id or not apns_token:
         return JsonResponse({"error": "user_id and apns_token required"}, status=400)
-    fields = (apns_token, bundle_id, app_version)
-    if not all(isinstance(value, str) and len(value) <= MAX_DEVICE_FIELD_LENGTH for value in fields):
+    fields = {"apns_token": apns_token, "bundle_id": bundle_id, "app_version": app_version}
+    if not all(_fits_device_column(field, value) for field, value in fields.items()):
         return JsonResponse({"error": "invalid device data"}, status=400)
 
     user = User.objects.filter(pk=user_id).first() if str(user_id).isdecimal() else None

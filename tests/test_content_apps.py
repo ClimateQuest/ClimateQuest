@@ -1,7 +1,6 @@
 """Articles, events, forum and petitions share the same patterns (overview, detail, comments, edit)."""
 
 import datetime
-from unittest import mock
 
 import pytest
 from django.utils import timezone
@@ -22,11 +21,7 @@ from petitions.models import Comment as PetitionComment
 from petitions.models import Petition, Update
 from tests.conftest import flash
 
-
-@pytest.fixture(autouse=True)
-def no_push():
-    with mock.patch("utils.functions.send_push", return_value=200):
-        yield
+pytestmark = pytest.mark.usefixtures("no_push")
 
 
 def msg(key):
@@ -347,7 +342,7 @@ def test_events_overview(client, user, other, event, django_assert_max_num_queri
     assert list(response.context["events"]) == [event]
     response = client.post("/events/overview/", {"order_by": "Name", "past_events_visible": "on"})
     assert [e.name for e in response.context["events"]] == ["Cleanup", "Old"]
-    assert past
+    assert response.context["events"][1] == past
 
 
 @pytest.mark.parametrize(

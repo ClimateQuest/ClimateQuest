@@ -30,10 +30,7 @@ def last_flash(response):
     return flash(response)[-1]
 
 
-@pytest.fixture(autouse=True)
-def no_push():
-    with mock.patch("utils.functions.send_push", return_value=200):
-        yield
+pytestmark = pytest.mark.usefixtures("no_push")
 
 
 @pytest.fixture

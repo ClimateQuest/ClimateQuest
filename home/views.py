@@ -26,6 +26,7 @@ from utils.functions import (
     get_streak_from_user,
     get_weekly_goal_from_user,
     get_worldwide_rank,
+    parse_id,
 )
 
 MAX_NOTIFICATION_LENGTH = 500
@@ -105,7 +106,7 @@ def find_notification_receivers(receiver_type, name):
             return None, "admin__community_not_found"
         return User.objects.filter(families__communities=community).distinct(), None
     if receiver_type == "event-participants":
-        event = Event.objects.filter(id=name).first() if str(name).isdigit() else None
+        event = Event.objects.filter(id=parse_id(name)).first()
         return (event.participants.all(), None) if event else (None, "admin__event_not_found")
     return None, "admin__invalid_receiver_type"
 
